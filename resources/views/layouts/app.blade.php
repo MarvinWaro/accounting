@@ -26,5 +26,9 @@
 
         {{-- flowbite --}}
 
+        {{-- JS LINK SCRIPT TO PUCLIC --}}
+        <script src="{{ asset('js/main.js') }}"></script>
+        
+
 @include('partials._footer')
 
