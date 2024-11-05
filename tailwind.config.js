@@ -24,6 +24,12 @@ export default {
                     700: '#2563eb',
                     800: '#1d4ed8',
                 },
+                secondary: {
+                    600: '#6c757d', // Similar to Bootstrap's gray
+                    700: '#5a6268', // Darker gray for hover
+                    800: '#495057', // Even darker for active or dark mode
+                    900: '#343a40', // Darkest gray for strong contrast in dark mode
+                },
             },
         },
     },
