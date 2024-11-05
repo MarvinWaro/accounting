@@ -10,7 +10,7 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
 
                 <section>
-                    <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16">
+                    <div class="py-8 px-4 mx-8 lg:py-16">
                         <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Add new entry</h2>
                         <form action="#">
                             <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
@@ -25,17 +25,48 @@
                                 </div>
 
                                 <!-- Particulars and Mode with 70% and 30% width, plus an Add button -->
-                                <div class="sm:col-span-2 grid grid-cols-11 gap-4 items-end">
+                                <div class="sm:col-span-3 grid grid-cols-11 gap-5 items-end">
                                     <!-- Particulars field taking 70% width -->
-                                    <div class="col-span-7">
+                                    <div x-data="{ open: false, selected: 'Select category' }" class="relative col-span-5">
                                         <label for="particulars" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Particulars</label>
-                                        <select id="particulars" name="particulars[]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                            <option selected="">Select category</option>
-                                            <option value="TV">TV/Monitors</option>
-                                            <option value="PC">PC</option>
-                                            <option value="GA">Gaming/Console</option>
-                                            <option value="PH">Phones</option>
-                                        </select>
+                                        <div class="relative">
+                                            <button @click="open = !open" type="button" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 flex justify-between">
+                                                <span x-text="selected"></span>
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" :class="{ 'rotate-180': open }">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                                </svg>
+                                            </button>
+                                            <ul x-show="open" @click.away="open = false" class="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto dark:bg-gray-700">
+                                                <li class="p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                    <button @click="selected = 'TV/Monitors'; open = false" type="button" value="TV" class="w-full text-left">TV/Monitors</button>
+                                                </li>
+                                                <li class="p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                    <button @click="selected = 'PC'; open = false" type="button" value="PC" class="w-full text-left">PC</button>
+                                                </li>
+                                                <li class="p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                    <button @click="selected = 'Gaming/Console'; open = false" type="button" value="GA" class="w-full text-left">Gaming/Console</button>
+                                                </li>
+                                                <li class="p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                    <button @click="selected = 'Phones'; open = false" type="button" value="PH" class="w-full text-left">Phones</button>
+                                                </li>
+                                                <!-- Add more options here -->
+                                                <li class="p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                    <button @click="selected = 'Other'; open = false" type="button" value="Other" class="w-full text-left">Other</button>
+                                                </li>
+                                                <li class="p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                    <button @click="selected = 'More'; open = false" type="button" value="More" class="w-full text-left">More</button>
+                                                </li>
+                                                <li class="p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                    <button @click="selected = 'Extra'; open = false" type="button" value="Extra" class="w-full text-left">Extra</button>
+                                                </li>
+                                                <li class="p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                    <button @click="selected = 'Another'; open = false" type="button" value="Another" class="w-full text-left">Another</button>
+                                                </li>
+                                                <li class="p-2 hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                    <button @click="selected = 'Final'; open = false" type="button" value="Final" class="w-full text-left">Final</button>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
 
                                     <!-- Mode field taking 30% width -->
@@ -48,8 +79,13 @@
                                         </select>
                                     </div>
 
+                                    <div class="col-span-2">
+                                        <label for="amount" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount</label>
+                                        <input type="amount" name="amount" id="amount" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required="">
+                                    </div>
+
                                     <!-- Plus button for adding more rows -->
-                                    <div class="col-span-1 flex justify-center pb-5">
+                                    <div class="col-span-1 flex justify-center pb-2">
                                         <button type="button" id="addRowButton" class=" text-primary-700 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-500">
                                             <!-- Plus icon (using Heroicons or Font Awesome) -->
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
