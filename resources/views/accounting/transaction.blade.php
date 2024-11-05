@@ -5,6 +5,14 @@
         </h2>
     </x-slot>
 
+    <style>
+        /* Custom styles for the table header */
+        #search-table thead th {
+            padding: 20px 24px; /* Adjust these values for top/bottom and left/right padding */
+        }
+    </style>
+
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
@@ -18,26 +26,26 @@
                         Add New Transaction
                     </a>
 
-                    <div class="table-wrapper my-4">
+                    <div class="table-wrapper">
                         <table id="search-table">
                             <thead>
                                 <tr>
-                                    <th>
+                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">
                                         <span class="flex items-center">
                                             Company Name
                                         </span>
                                     </th>
-                                    <th>
+                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">
                                         <span class="flex items-center">
                                             Ticker
                                         </span>
                                     </th>
-                                    <th>
+                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">
                                         <span class="flex items-center">
                                             Stock Price
                                         </span>
                                     </th>
-                                    <th>
+                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">
                                         <span class="flex items-center">
                                             Market Capitalization
                                         </span>
@@ -45,41 +53,77 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <tr class="hover:bg-gray-200 dark:hover:bg-gray-700">
                                     <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">Apple Inc.</td>
                                     <td>AAPL</td>
                                     <td>$192.58</td>
                                     <td>$3.04T</td>
                                 </tr>
-                                <tr>
+                                <tr class="hover:bg-gray-200 dark:hover:bg-gray-700">
                                     <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">Microsoft Corporation</td>
                                     <td>MSFT</td>
                                     <td>$340.54</td>
                                     <td>$2.56T</td>
                                 </tr>
-                                <tr>
+                                <tr class="hover:bg-gray-200 dark:hover:bg-gray-700">
                                     <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">Alphabet Inc.</td>
                                     <td>GOOGL</td>
                                     <td>$134.12</td>
                                     <td>$1.72T</td>
                                 </tr>
-                                <tr>
-                                    <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">Amazon.com Inc.</td>
-                                    <td>AMZN</td>
-                                    <td>$138.01</td>
-                                    <td>$1.42T</td>
+                                <tr class="hover:bg-gray-200 dark:hover:bg-gray-700">
+                                    <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">Apple Inc.</td>
+                                    <td>AAPL</td>
+                                    <td>$192.58</td>
+                                    <td>$3.04T</td>
                                 </tr>
-                                <tr>
-                                    <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">NVIDIA Corporation</td>
-                                    <td>NVDA</td>
-                                    <td>$466.19</td>
-                                    <td>$1.16T</td>
+                                <tr class="hover:bg-gray-200 dark:hover:bg-gray-700">
+                                    <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">Microsoft Corporation</td>
+                                    <td>MSFT</td>
+                                    <td>$340.54</td>
+                                    <td>$2.56T</td>
                                 </tr>
-                                <tr>
-                                    <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">Tesla Inc.</td>
-                                    <td>TSLA</td>
-                                    <td>$255.98</td>
-                                    <td>$811.00B</td>
+                                <tr class="hover:bg-gray-200 dark:hover:bg-gray-700">
+                                    <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">Alphabet Inc.</td>
+                                    <td>GOOGL</td>
+                                    <td>$134.12</td>
+                                    <td>$1.72T</td>
+                                </tr>
+                                <tr class="hover:bg-gray-200 dark:hover:bg-gray-700">
+                                    <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">Apple Inc.</td>
+                                    <td>AAPL</td>
+                                    <td>$192.58</td>
+                                    <td>$3.04T</td>
+                                </tr>
+                                <tr class="hover:bg-gray-200 dark:hover:bg-gray-700">
+                                    <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">Microsoft Corporation</td>
+                                    <td>MSFT</td>
+                                    <td>$340.54</td>
+                                    <td>$2.56T</td>
+                                </tr>
+                                <tr class="hover:bg-gray-200 dark:hover:bg-gray-700">
+                                    <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">Alphabet Inc.</td>
+                                    <td>GOOGL</td>
+                                    <td>$134.12</td>
+                                    <td>$1.72T</td>
+                                </tr>
+                                <tr class="hover:bg-gray-200 dark:hover:bg-gray-700">
+                                    <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">Apple Inc.</td>
+                                    <td>AAPL</td>
+                                    <td>$192.58</td>
+                                    <td>$3.04T</td>
+                                </tr>
+                                <tr class="hover:bg-gray-200 dark:hover:bg-gray-700">
+                                    <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">Microsoft Corporation</td>
+                                    <td>MSFT</td>
+                                    <td>$340.54</td>
+                                    <td>$2.56T</td>
+                                </tr>
+                                <tr class="hover:bg-gray-200 dark:hover:bg-gray-700">
+                                    <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">Alphabet Inc.</td>
+                                    <td>GOOGL</td>
+                                    <td>$134.12</td>
+                                    <td>$1.72T</td>
                                 </tr>
                             </tbody>
                         </table>
