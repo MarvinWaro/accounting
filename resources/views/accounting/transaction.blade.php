@@ -13,7 +13,7 @@
                     <div class="dark:bg-gray-800 flex justify-center items-center">
                         <section class="grid gap-6 md:grid-cols-4 p-4 md:p-8 max-w-9xl mx-auto w-full ">
 
-                            <a href="#!">
+                            <a href="{{ route('transaction_list') }}">
                                 <div class="p-6 bg-white shadow-xl hover:shadow-2xl hover:scale-105 transform transition rounded-2xl dark:bg-gray-900">
                                     <dl class="space-y-2">
                                         <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">January</dt>

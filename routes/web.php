@@ -16,6 +16,10 @@ Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified',])
         return view('accounting.transaction');
     })->name('transaction');
 
+    Route::get('transaction_list', function () {
+        return view('accounting.transaction_list');
+    })->name('transaction_list');
+
     Route::get('create_transaction', function () {
         return view('accounting.create_transaction');
     })->name('create_transaction');

@@ -91,7 +91,7 @@
                             <!-- Button section spanning across two columns -->
                             <div class="sm:col-span-2 grid grid-cols-2 gap-4 mt-10">
                                 <!-- Back button -->
-                                <a href="#" class="inline-flex w-full items-center justify-center px-5 py-2.5 text-sm font-medium text-center text-white bg-secondary-600 rounded-lg hover:bg-secondary-700 focus:ring-2 focus:ring-secondary-200 dark:text-white dark:bg-secondary-800 dark:hover:bg-secondary-900 dark:focus:ring-secondary-900">
+                                <a href="{{ route('transaction_list') }}" class="inline-flex w-full items-center justify-center px-5 py-2.5 text-sm font-medium text-center text-white bg-secondary-600 rounded-lg hover:bg-secondary-700 focus:ring-2 focus:ring-secondary-200 dark:text-white dark:bg-secondary-800 dark:hover:bg-secondary-900 dark:focus:ring-secondary-900">
                                     Back
                                 </a>
                                 <!-- Save button -->
