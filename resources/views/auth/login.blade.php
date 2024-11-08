@@ -1,5 +1,25 @@
 <x-guest-layout>
+
     <x-authentication-card>
+
+        <!-- Dark Mode Toggle Switch -->
+        <label class="me-4 relative inline-flex items-center cursor-pointer mb-5">
+            <input type="checkbox" id="theme-toggle" class="sr-only peer" />
+            <!-- Toggle Switch Background -->
+            <div class="w-14 h-8 bg-gray-200 dark:bg-gray-700 rounded-full peer-focus:outline-none peer-checked:bg-yellow-500 peer-checked:dark:bg-gray-600 transition-colors duration-300 ease-in-out flex items-center justify-between px-1">
+                <!-- Sun Icon (Light Mode) -->
+                <span class="w-6 h-6 text-yellow-400 flex items-center justify-center">
+                    <i class="fa-solid fa-sun"></i>
+                </span>
+                <!-- Moon Icon (Dark Mode) -->
+                <span class="w-6 h-6 text-gray-400 flex items-center justify-center">
+                    <i class="fa-solid fa-moon"></i>
+                </span>
+            </div>
+            <!-- Toggle Switch Button -->
+            <span class="absolute left-1 w-6 h-6 bg-white rounded-full peer-checked:translate-x-6 transition-transform duration-300 ease-in-out"></span>
+        </label>
+
         <x-slot name="logo">
             <x-authentication-card-logo />
         </x-slot>
@@ -45,4 +65,40 @@
             </div>
         </form>
     </x-authentication-card>
+
+
+    <script>
+        // Function to toggle dark mode
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const toggleSwitch = document.getElementById('theme-toggle');
+
+            // Toggle light mode on when checked, dark mode otherwise
+            if (toggleSwitch.checked) {
+                localStorage.setItem('theme', 'light');
+                html.classList.remove('dark');
+            } else {
+                localStorage.setItem('theme', 'dark');
+                html.classList.add('dark');
+            }
+        }
+
+        // Event listener for the toggle button
+        document.getElementById('theme-toggle').addEventListener('change', toggleDarkMode);
+
+        // Load theme on page load based on localStorage value
+        window.addEventListener('DOMContentLoaded', () => {
+            const toggleSwitch = document.getElementById('theme-toggle');
+            const storedTheme = localStorage.getItem('theme');
+
+            if (storedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+                toggleSwitch.checked = false; // Unchecked for dark mode
+            } else {
+                document.documentElement.classList.remove('dark');
+                toggleSwitch.checked = true; // Checked for light mode
+            }
+        });
+    </script>
+
 </x-guest-layout>

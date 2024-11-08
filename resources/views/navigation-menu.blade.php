@@ -34,7 +34,7 @@
                     <x-nav-link href="{{ route('accounting_dashboard') }}" :active="request()->routeIs('accounting_dashboard')">
                         {{ __('Accounting Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link href="{{ route('transaction') }}" :active="request()->routeIs('transaction') || request()->routeIs('create_transaction') || request()->routeIs('transaction_list')">
+                    <x-nav-link href="{{ route('transaction') }}" :active="request()->routeIs('transaction') || request()->routeIs('transaction_list') || request()->routeIs('create_transaction')">
                         {{ __('Transaction') }}
                     </x-nav-link>
                 </div>
@@ -99,8 +99,11 @@
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
-                                <button class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
+                                <button class="flex items-center text-sm border-2 border-transparent rounded-full focus:outline-none transition">
+
+                                    <span class="ml-2 text-gray-500 dark:text-gray-400 me-3">{{ Auth::user()->name }}</span>
                                     <img class="h-8 w-8 rounded-full object-cover" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
+
                                 </button>
                             @else
                                 <span class="inline-flex rounded-md">
@@ -114,6 +117,7 @@
                                 </span>
                             @endif
                         </x-slot>
+
 
                         <x-slot name="content">
                             <!-- Account Management -->
@@ -276,7 +280,6 @@
 </script>
 
 
-
 {{-- <script>
     // Function to toggle dark mode
     function toggleDarkMode() {
@@ -312,9 +315,6 @@
         }
     });
 </script> --}}
-
-
-
 {{-- <script>
     // Function to toggle dark mode
     function toggleDarkMode() {

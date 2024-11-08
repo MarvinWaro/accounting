@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Transaction January') }}
+            {{ __('Transaction') }}
         </h2>
     </x-slot>
 
@@ -20,7 +20,6 @@
         border-radius: 5px;
         z-index: 1;
         }
-        .hidden { display: none; }
     </style>
 
     <div class="py-12">
@@ -189,13 +188,12 @@
                 sortable: false
             });
         }
-    </script>
 
-<script>
-    function toggleDropdown(button) {
-        const content = button.nextElementSibling;
-        content.classList.toggle('hidden');
-    }
-</script>
+
+        function toggleDropdown(button) {
+            const content = button.nextElementSibling;
+            content.classList.toggle('hidden');
+        }
+    </script>
 
 </x-app-layout>

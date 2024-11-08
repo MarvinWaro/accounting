@@ -492,7 +492,7 @@ import typography from '@tailwindcss/typography';
     ............................................................................................................
 
 
-                                    <tr class="hover:bg-gray-200 dark:hover:bg-gray-700">
+                                <tr class="hover:bg-gray-200 dark:hover:bg-gray-700">
                                     <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">2021/03/21</td>
                                     <td>MSFT</td>
                                     <td>
@@ -518,4 +518,4 @@ import typography from '@tailwindcss/typography';
                                     <td>Training expenses for team</td>
                                 </tr>
 
-                                
+
