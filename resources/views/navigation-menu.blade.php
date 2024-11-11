@@ -1,6 +1,6 @@
 <nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
     <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class=" mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
 
@@ -8,13 +8,13 @@
                 <label class="me-4 relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" id="theme-toggle" class="sr-only peer" />
                     <!-- Toggle Switch Background -->
-                    <div class="w-14 h-8 bg-gray-200 dark:bg-gray-700 rounded-full peer-focus:outline-none peer-checked:bg-yellow-500 peer-checked:dark:bg-gray-600 transition-colors duration-300 ease-in-out flex items-center justify-between px-1">
+                    <div class="w-14 h-8 bg-gray-200 dark:bg-blue-500 rounded-full peer-focus:outline-none peer-checked:bg-yellow-300 peer-checked:dark:bg-gray-600 transition-colors duration-300 ease-in-out flex items-center justify-between px-1">
                         <!-- Sun Icon (Light Mode) -->
-                        <span class="w-6 h-6 text-yellow-400 flex items-center justify-center">
+                        <span class="w-6 h-6 text-yellow-600 flex items-center justify-center">
                             <i class="fa-solid fa-sun"></i>
                         </span>
                         <!-- Moon Icon (Dark Mode) -->
-                        <span class="w-6 h-6 text-gray-400 flex items-center justify-center">
+                        <span class="w-6 h-6 text-gray-200 flex items-center justify-center">
                             <i class="fa-solid fa-moon"></i>
                         </span>
                     </div>
@@ -34,8 +34,8 @@
                     <x-nav-link href="{{ route('accounting_dashboard') }}" :active="request()->routeIs('accounting_dashboard')">
                         {{ __('Accounting Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link href="{{ route('transaction') }}" :active="request()->routeIs('transaction') || request()->routeIs('transaction_list') || request()->routeIs('create_transaction')">
-                        {{ __('Transaction') }}
+                    <x-nav-link href="{{ route('transaction') }}" :active="request()->routeIs('transaction') || request()->routeIs('transaction_list') || request()->routeIs('create_transaction') || request()->routeIs('month_transactions') || request()->routeIs('gj_recap')">
+                        {{ __('Transactions') }}
                     </x-nav-link>
                 </div>
 
