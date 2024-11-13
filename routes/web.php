@@ -33,4 +33,16 @@ Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified',])
     })->name('gj_recap');
 
 
+    // UACS
+
+    Route::get('uacs_index', function () {
+        return view('accounting.uacs.uacs_index');
+    })->name('uacs_index');
+
+    Route::get('uacs_create', function () {
+        return view('accounting.uacs.uacs_create');
+    })->name('uacs_create');
+
+
+
 });
