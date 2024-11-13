@@ -37,6 +37,9 @@
                     <x-nav-link href="{{ route('transaction') }}" :active="request()->routeIs('transaction') || request()->routeIs('transaction_list') || request()->routeIs('create_transaction') || request()->routeIs('month_transactions') || request()->routeIs('gj_recap')">
                         {{ __('Transactions') }}
                     </x-nav-link>
+                    <x-nav-link href="{{ route('uacs_index') }}" :active="request()->routeIs('uacs_index')">
+                        {{ __('UACS') }}
+                    </x-nav-link>
                 </div>
 
             </div>
