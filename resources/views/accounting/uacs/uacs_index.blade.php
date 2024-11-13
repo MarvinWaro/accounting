@@ -22,6 +22,14 @@
         border-radius: 5px;
         z-index: 1;
         }
+
+        td {
+            max-width: 300px; /* Adjust based on your table design */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
     </style>
 
 
@@ -41,153 +49,65 @@
                         <table id="search-table">
                             <thead>
                                 <tr>
-                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">
-                                        <span class="flex items-center">
-                                            Action
-                                        </span>
-                                    </th>
-                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">
-                                        <span class="flex items-center">
-                                            ID
-                                        </span>
-                                    </th>
-                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">
-                                        <span class="flex items-center">
-                                            Account No.
-                                        </span>
-                                    </th>
-                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">
-                                        <span class="flex items-center">
-                                            Account Description
-                                        </span>
-                                    </th>
-
+                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">Action</th>
+                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">ID</th>
+                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">Account No.</th>
+                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">Account Description</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr class="hover:bg-gray-200 dark:hover:bg-gray-700">
-                                    <td>
-                                        <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="text-gray-800 bg-transparent border border-gray-300 hover:text-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-transparent dark:border-gray-600 dark:text-gray-300 dark:hover:text-gray-400 dark:focus:ring-gray-800" type="button">Action
-                                            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                                            </svg>
-                                        </button>
-
-                                        <!-- Dropdown menu -->
-                                        <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                                            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-                                                <li>
-                                                    <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                                        <i class="fa-solid fa-eye me-2"></i>View
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#!" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                                        <i class="fa-solid fa-pen-to-square me-2"></i>Edit
-                                                    </a>
-                                                </li>
-                                                <hr class="w-[90%] mx-auto">
-                                                <li>
-                                                    <!-- Unique class for each form to handle SweetAlert -->
-                                                    <form action="#!" method="POST" class="delete-form delete-form">
-                                                        <!-- Button styled to behave like a link -->
-                                                        <button type="submit" class="delete-button w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white flex items-center focus:outline-none">
-                                                            <i class="fa-solid fa-trash me-2 text-red-500"></i><span class="text-red-500">Delete</span>
-                                                        </button>
-                                                    </form>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                    <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">1</td>
-                                    <td>123789456</td>
-                                    <td>
-                                        Petty Cash
-                                    </td>
-                                </tr>
-                                <tr class="hover:bg-gray-200 dark:hover:bg-gray-700">
-                                    <td>
-                                        <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="text-gray-800 bg-transparent border border-gray-300 hover:text-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-transparent dark:border-gray-600 dark:text-gray-300 dark:hover:text-gray-400 dark:focus:ring-gray-800" type="button">Action
-                                            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                                            </svg>
-                                        </button>
-
-                                        <!-- Dropdown menu -->
-                                        <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                                            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-                                                <li>
-                                                    <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                                        <i class="fa-solid fa-eye me-2"></i>View
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#!" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                                        <i class="fa-solid fa-pen-to-square me-2"></i>Edit
-                                                    </a>
-                                                </li>
-                                                <hr class="w-[90%] mx-auto">
-                                                <li>
-                                                    <!-- Unique class for each form to handle SweetAlert -->
-                                                    <form action="#!" method="POST" class="delete-form delete-form">
-                                                        <!-- Button styled to behave like a link -->
-                                                        <button type="submit" class="delete-button w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white flex items-center focus:outline-none">
-                                                            <i class="fa-solid fa-trash me-2 text-red-500"></i><span class="text-red-500">Delete</span>
-                                                        </button>
-                                                    </form>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                    <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">2</td>
-                                    <td>987456321</td>
-                                    <td>
-                                        Other Payments
-                                    </td>
-                                </tr>
-                                <tr class="hover:bg-gray-200 dark:hover:bg-gray-700">
-                                    <td>
-                                        <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="text-gray-800 bg-transparent border border-gray-300 hover:text-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-transparent dark:border-gray-600 dark:text-gray-300 dark:hover:text-gray-400 dark:focus:ring-gray-800" type="button">Action
-                                            <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-                                            </svg>
-                                        </button>
-
-                                        <!-- Dropdown menu -->
-                                        <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                                            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-                                                <li>
-                                                    <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                                        <i class="fa-solid fa-eye me-2"></i>View
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#!" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                                        <i class="fa-solid fa-pen-to-square me-2"></i>Edit
-                                                    </a>
-                                                </li>
-                                                <hr class="w-[90%] mx-auto">
-                                                <li>
-                                                    <!-- Unique class for each form to handle SweetAlert -->
-                                                    <form action="#!" method="POST" class="delete-form delete-form">
-                                                        <!-- Button styled to behave like a link -->
-                                                        <button type="submit" class="delete-button w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white flex items-center focus:outline-none">
-                                                            <i class="fa-solid fa-trash me-2 text-red-500"></i><span class="text-red-500">Delete</span>
-                                                        </button>
-                                                    </form>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                    <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">3</td>
-                                    <td>2468134679</td>
-                                    <td>
-                                        Cash MDS
-                                    </td>
-                                </tr>
+                                @foreach ($accounts as $account)
+                                    <tr class="hover:bg-gray-200 dark:hover:bg-gray-700">
+                                        <td>
+                                            <button
+                                                id="dropdownDefaultButton"
+                                                data-dropdown-toggle="dropdown{{$account->id}}"
+                                                class="text-gray-800 bg-transparent border border-gray-300 hover:text-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-transparent dark:border-gray-600 dark:text-gray-300 dark:hover:text-gray-400 dark:focus:ring-gray-800"
+                                                type="button">
+                                                Action
+                                                <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                                                </svg>
+                                            </button>
+                                            <!-- Dropdown menu -->
+                                            <div id="dropdown{{$account->id}}" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                                                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
+                                                    <li>
+                                                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                            <i class="fa-solid fa-eye me-2"></i>View
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="{{ route('uacs_edit', $account->id) }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                            <i class="fa-solid fa-pen-to-square me-2"></i>Edit
+                                                        </a>
+                                                    </li>
+                                                    <hr class="w-[90%] mx-auto">
+                                                    <li>
+                                                        <!-- Delete Form -->
+                                                        <form action="{{ route('uacs_destroy', $account->id) }}" method="POST" class="delete-form" id="delete-form-{{$account->id}}">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="button" class="delete-button w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white flex items-center focus:outline-none" onclick="confirmDelete({{ $account->id }})">
+                                                                <i class="fa-solid fa-trash me-2 text-red-500"></i><span class="text-red-500">Delete</span>
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                        <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $account->id }}</td>
+                                        <td>{{ $account->account_no }}</td>
+                                        <td>{{ \Illuminate\Support\Str::limit($account->description, 100, '...') }}</td>
+                                    </tr>
+                                @endforeach
                             </tbody>
+
                         </table>
                     </div>
+
+
+
                 </div>
 
             </div>
@@ -201,6 +121,17 @@
                 searchable: true,
                 sortable: false
             });
+        }
+    </script>
+
+
+    <script>
+        function confirmDelete(accountId) {
+            // Show a confirmation prompt
+            if (confirm("Are you sure you want to delete this account?")) {
+                // If confirmed, submit the form
+                document.getElementById('delete-form-' + accountId).submit();
+            }
         }
     </script>
 
