@@ -24,18 +24,19 @@
                         @endif
 
 
-                        <form action="{{ route('uacs_store') }}" method="POST" class="flex items-center gap-4">
+                        <form action="{{ route('uacs_update', $account->id) }}" method="POST" class="flex items-center gap-4">
                             @csrf
+                            @method('PUT')
                             <!-- Account No. -->
                             <div class="flex-1 basis-1/3">
                                 <label for="account_no" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Account No.</label>
-                                <input type="text" name="account_no" id="account_no" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                                <input type="text" name="account_no" id="account_no" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ old('account_no', $account->account_no) }}" required>
                             </div>
 
                             <!-- Account Description -->
                             <div class="flex-1 basis-2/3">
                                 <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Account Description</label>
-                                <input type="text" name="description" id="description" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" required>
+                                <input type="text" name="description" id="description" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="{{ old('description', $account->description) }}" required>
                             </div>
 
                             <!-- Save Account Button -->
@@ -45,6 +46,7 @@
                                 </button>
                             </div>
                         </form>
+
 
                     </div>
                 </section>
