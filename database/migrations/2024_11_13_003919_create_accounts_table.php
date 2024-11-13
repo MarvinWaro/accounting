@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('account_no')->unique();
             $table->string('description');
+            $table->boolean('activate')->default(1); // Whether the folder is active
+            $table->boolean('exclude')->default(0); // Whether the folder is excluded
             $table->timestamps();
         });
     }
@@ -26,4 +28,5 @@ return new class extends Migration
     {
         Schema::dropIfExists('accounts');
     }
+
 };

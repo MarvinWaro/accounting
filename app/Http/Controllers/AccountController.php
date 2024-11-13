@@ -10,9 +10,11 @@ class AccountController extends Controller
     // Show all accounts
     public function index()
     {
-        $accounts = Account::all();
+        // Fetch accounts that are not excluded
+        $accounts = Account::where('exclude', 0)->get();
         return view('accounting.uacs.uacs_index', compact('accounts'));
     }
+
 
     // Show form to create a new account
     public function create()
@@ -28,9 +30,27 @@ class AccountController extends Controller
             'description' => 'required',
         ]);
 
-        Account::create($validated);
-        return redirect()->route('uacs_index')->with('success', 'Account created successfully.');
+        // Check if there is an excluded account to reuse
+        $excludedAccount = Account::where('exclude', 1)->first();
+
+        if ($excludedAccount) {
+            // Reuse the excluded account
+            $excludedAccount->update([
+                'account_no' => $validated['account_no'],
+                'description' => $validated['description'],
+                'exclude' => 0, // Reactivate the account
+                'activate' => 1, // Set to active
+            ]);
+
+            return redirect()->route('uacs_index')->with('success', 'Excluded account reused successfully.');
+        } else {
+            // Create a new account if no excluded account exists
+            Account::create(array_merge($validated, ['exclude' => 0, 'activate' => 1]));
+
+            return redirect()->route('uacs_index')->with('success', 'Account created successfully.');
+        }
     }
+
 
     public function edit($id)
     {
@@ -59,10 +79,15 @@ class AccountController extends Controller
     public function destroy($id)
     {
         $account = Account::findOrFail($id);
-        $account->delete();
 
-        return redirect()->route('uacs_index')->with('success', 'Account deleted successfully.');
+        $account->update([
+            'exclude' => 1, // Mark as excluded
+            'activate' => 0, // Deactivate the account
+        ]);
+
+        return redirect()->route('uacs_index')->with('success', 'Account deactivated successfully.');
     }
+
 
 
 }

@@ -9,6 +9,6 @@ class Account extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['account_no', 'description'];
+    protected $fillable = ['account_no', 'description', 'activate', 'exclude'];
 }
 
