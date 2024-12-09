@@ -97,12 +97,13 @@
                                             </div>
                                         </td>
                                         <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $account->id }}</td>
-                                        <td>{{ $account->account_no }}</td>
+
+                                        <!-- Formatted account number -->
+                                        <td>{{ substr($account->account_no, 0, 1) }}-{{ substr($account->account_no, 1, 2) }}-{{ substr($account->account_no, 3, 2) }}-{{ substr($account->account_no, 5, 3) }}-{{ substr($account->account_no, 8, 2) }}</td>
                                         <td>{{ \Illuminate\Support\Str::limit($account->description, 100, '...') }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
-
                         </table>
                     </div>
 
@@ -121,9 +122,26 @@
                 searchable: true,
                 sortable: false
             });
+
+            // Override the default search method
+            dataTable.on('datatable.search', function(query) {
+                const normalizedQuery = query.replace(/-/g, ''); // Remove dashes from search input
+
+                // Iterate over each row to normalize account_no (remove dashes)
+                dataTable.rows().forEach(function(row, index) {
+                    let accountNoCell = row.cells[2].textContent; // Assuming account_no is in the third column (index 2)
+                    let normalizedAccountNo = accountNoCell.replace(/-/g, ''); // Remove dashes from account_no
+
+                    // Check if the normalized account_no contains the search query
+                    if (normalizedAccountNo.includes(normalizedQuery)) {
+                        dataTable.rows().show([index]);
+                    } else {
+                        dataTable.rows().hide([index]);
+                    }
+                });
+            });
         }
     </script>
-
 
     <script>
         function confirmDelete(accountId) {

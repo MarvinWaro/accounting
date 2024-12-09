@@ -34,18 +34,6 @@ Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified',])
     })->name('gj_recap');
 
 
-    // UACS
-
-    // Route::get('uacs_index', function () {
-    //     return view('accounting.uacs.uacs_index');
-    // })->name('uacs_index');
-
-    // Route::get('uacs_create', function () {
-    //     return view('accounting.uacs.uacs_create');
-    // })->name('uacs_create');
-
-    // Route::resource('accounts', AccountController::class);
-
     // Display list of accounts
     Route::get('uacs_index', [AccountController::class, 'index'])->name('uacs_index');
     Route::get('uacs_create', [AccountController::class, 'create'])->name('uacs_create');

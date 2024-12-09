@@ -10,11 +10,13 @@ class AccountController extends Controller
     // Show all accounts
     public function index()
     {
-        // Fetch accounts that are not excluded
-        $accounts = Account::where('exclude', 0)->get();
+        // Fetch accounts that are not excluded, ordered by creation date (latest first)
+        $accounts = Account::where('exclude', 0)
+            ->orderBy('created_at', 'DESC') // Order by created_at in descending order
+            ->get();
+
         return view('accounting.uacs.uacs_index', compact('accounts'));
     }
-
 
     // Show form to create a new account
     public function create()
