@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\TransactionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -13,25 +14,25 @@ Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified',])
         return view('accounting.accounting_dashboard');
     })->name('accounting_dashboard');
 
-    Route::get('transaction', function () {
-        return view('accounting.transactions.transaction');
-    })->name('transaction');
+    // Route::get('transaction', function () {
+    //     return view('accounting.transactions.transaction');
+    // })->name('transaction');
 
-    Route::get('transaction_list', function () {
-        return view('accounting.transactions.transaction_list');
-    })->name('transaction_list');
+    // Route::get('transaction_list', function () {
+    //     return view('accounting.transactions.transaction_list');
+    // })->name('transaction_list');
 
-    Route::get('create_transaction', function () {
-        return view('accounting.transactions.create_transaction');
-    })->name('create_transaction');
+    // Route::get('create_transaction', function () {
+    //     return view('accounting.transactions.create_transaction');
+    // })->name('create_transaction');
 
-    Route::get('month_transactions', function () {
-        return view('accounting.transactions.month_transactions');
-    })->name('month_transactions');
+    // Route::get('month_transactions', function () {
+    //     return view('accounting.transactions.month_transactions');
+    // })->name('month_transactions');
 
-    Route::get('gj_recap', function () {
-        return view('accounting.transactions.gj_recap');
-    })->name('gj_recap');
+    // Route::get('gj_recap', function () {
+    //     return view('accounting.transactions.gj_recap');
+    // })->name('gj_recap');
 
 
     // Display list of accounts
@@ -41,5 +42,10 @@ Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified',])
     Route::get('uacs/{id}/edit', [AccountController::class, 'edit'])->name('uacs_edit');
     Route::put('uacs/{id}', [AccountController::class, 'update'])->name('uacs_update');
     Route::delete('uacs/{id}', [AccountController::class, 'destroy'])->name('uacs_destroy');
+
+
+    Route::get('transaction_index', [TransactionController::class, 'index'])->name('transaction.index');
+    Route::get('transaction_create', [TransactionController::class, 'create'])->name('transaction.create');
+    Route::post('transaction_store', [TransactionController::class, 'store'])->name('transaction.store');
 
 });

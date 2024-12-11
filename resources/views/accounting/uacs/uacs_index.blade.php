@@ -7,30 +7,7 @@
     </x-slot>
 
 
-    <style>
-        /* Custom styles for the table header */
-        #search-table thead th {
-            padding: 20px 24px; /* Adjust these values for top/bottom and left/right padding */
-        }
 
-        .dropdown-content {
-        display: none;
-        position: absolute;
-        background-color: white;
-        padding: 5px;
-        border: 1px solid gray;
-        border-radius: 5px;
-        z-index: 1;
-        }
-
-        td {
-            max-width: 300px; /* Adjust based on your table design */
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-    </style>
 
 
     <div class="py-12">

@@ -4,15 +4,6 @@
             {{ __('General Journal Recap') }}
         </h2>
 
-        <br>
-
-        <x-breadcrumbs :links="[
-            'Transactions' => route('transaction'),
-            'Year 2024' => route('month_transactions', 2024),
-            'January' => route('transaction_list', ['year' => 2024, 'month' => 1]),
-            'GJ Recap' => '#'
-        ]" />
-
     </x-slot>
 
     <div class="py-12">

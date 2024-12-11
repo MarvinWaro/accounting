@@ -4,15 +4,6 @@
             {{ __('Create Transaction') }}
         </h2>
 
-        <br>
-
-        <x-breadcrumbs :links="[
-            'Transactions' => route('transaction'),
-            'Year 2024' => route('month_transactions', 2024)
-        ]" />
-
-
-
     </x-slot>
 
     <div class="py-12">

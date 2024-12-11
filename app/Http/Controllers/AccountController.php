@@ -28,7 +28,7 @@ class AccountController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'account_no' => 'required|unique:accounts',
+            'account_no' => 'required|integer|unique:accounts', // Validate as an integer
             'description' => 'required',
         ]);
 
@@ -67,7 +67,7 @@ class AccountController extends Controller
     {
         // Validate the input
         $validated = $request->validate([
-            'account_no' => 'required|unique:accounts,account_no,' . $id, // Allow the current account to keep its number
+            'account_no' => 'required|integer|unique:accounts,account_no,' . $id,
             'description' => 'required',
         ]);
 
