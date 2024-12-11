@@ -519,3 +519,14 @@ import typography from '@tailwindcss/typography';
                                 </tr>
 
 
+                                <!-- Button to Add New Transaction Row -->
+                                <div class="col-span-full flex justify-end mt-4">
+                                    <button type="button" id="addRowButton" class="text-primary-700 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-500">
+                                        <div class="button-wrapper flex">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M12 4v16m8-8H4" />
+                                            </svg>
+                                            <span class="ms-2">Add Transaction</span>
+                                        </div>
+                                    </button>
+                                </div>
