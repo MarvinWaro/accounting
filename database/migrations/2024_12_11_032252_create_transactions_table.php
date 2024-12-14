@@ -23,7 +23,7 @@ return new class extends Migration {
             $table->string('particulars');
             $table->string('uacs_code');
             $table->string('mode_of_payment');
-            $table->decimal('amount', 15, 2);
+            $table->decimal('amount', 20, 2);
             $table->timestamps();
         });
     }

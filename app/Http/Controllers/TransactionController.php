@@ -12,8 +12,10 @@ class TransactionController extends Controller
 {
     public function index()
     {
-        return view('accounting.transactions.transaction_list');
+        $transactions = Transaction::all();
+        return view('accounting.transactions.transaction_list', compact('transactions'));
     }
+
 
     public function create()
     {
@@ -22,6 +24,17 @@ class TransactionController extends Controller
 
     public function store(Request $request)
     {
+        // Create a new array to store the cleaned data
+        $details = $request->details;
+
+        // Clean up the 'amount' fields by removing commas
+        foreach ($details as &$detail) {
+            $detail['amount'] = preg_replace('/,/', '', $detail['amount']); // Remove commas
+        }
+
+        // Re-assign the cleaned 'details' array back to the request
+        $request->merge(['details' => $details]);
+
         // Validate the form data, especially the 'details' array
         $validated = $request->validate([
             'transaction_date' => 'required|date',
@@ -29,10 +42,14 @@ class TransactionController extends Controller
             'description' => 'nullable|string',
             'ref' => 'nullable|string|max:255',
             'payee' => 'required|string|max:255',
+            'details' => 'required|array|min:1', // Ensure at least one transaction detail is present
             'details.*.particulars' => 'required|string|max:255',
             'details.*.uacs_code' => 'required|numeric',
             'details.*.mode_of_payment' => 'required|string|in:Credit,Debit',
-            'details.*.amount' => 'required|numeric|min:0',
+            'details.*.amount' => 'required|numeric|min:0|max:100000000000', // Validate amount as a number
+        ], [
+            'details.required' => 'There is no transaction made.',
+            'details.min' => 'There is no transaction made.', // Custom message if no transactions
         ]);
 
         try {
@@ -69,6 +86,9 @@ class TransactionController extends Controller
             return redirect()->back()->withErrors(['An error occurred while creating the transaction: ' . $e->getMessage()]);
         }
     }
+
+
+
 
 }
 

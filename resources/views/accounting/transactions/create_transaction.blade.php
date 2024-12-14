@@ -9,7 +9,7 @@
         <div class="mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
 
-                {{-- @if ($errors->any())
+                @if ($errors->any())
                     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
                         <strong>Whoops!</strong> There were some problems with your input.<br><br>
                         <ul>
@@ -18,7 +18,7 @@
                             @endforeach
                         </ul>
                     </div>
-                @endif --}}
+                @endif
 
                 <section>
                     <div class="max-w-7xl mx-auto py-8 px-4 lg:py-16">
@@ -47,9 +47,9 @@
                                 </div>
 
                                 <!-- Button to Add New Transaction Row -->
-                                <div class="col-span-full flex justify-end mt-4">
-                                    <button type="button" id="addRowButton" class="text-primary-700 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-500">
-                                        <div class="button-wrapper flex">
+                                <div class="col-span-full mt-4">
+                                    <button type="button" id="addRowButton" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
+                                        <div class="button-wrapper flex items-center justify-center">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M12 4v16m8-8H4" />
                                             </svg>
@@ -57,6 +57,7 @@
                                         </div>
                                     </button>
                                 </div>
+
 
                                 <div class="w-full">
                                     <label for="ref" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ref</label>
@@ -101,7 +102,34 @@
                         document.addEventListener("DOMContentLoaded", function () {
                             const container = document.getElementById("transaction-fields-container");
                             const addRowButton = document.getElementById("addRowButton");
+                            const form = document.querySelector('form'); // Assuming the form has a 'form' tag
                             let rowIndex = 0; // Initialize row index
+
+                            // Function to format the number with commas
+                            function formatNumberWithCommas(value) {
+                                value = value.replace(/[^\d.]/g, ''); // Remove anything that's not a number or decimal point
+                                const parts = value.split('.');
+                                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ','); // Add commas to the integer part
+                                return parts.join('.'); // Rejoin integer and decimal parts
+                            }
+
+                            // Function to attach the input formatting event to the amount field
+                            function attachAmountInputEvent(input) {
+                                input.addEventListener('input', function (e) {
+                                    const rawValue = input.value.replace(/[^\d.]/g, ''); // Raw number without commas
+                                    const formattedValue = formatNumberWithCommas(rawValue); // Formatted number with commas
+
+                                    // Calculate cursor position adjustment based on the difference in lengths
+                                    const cursorPosition = input.selectionStart;
+                                    const cursorAdjustment = formattedValue.length - rawValue.length;
+
+                                    // Set the input value to the formatted value
+                                    input.value = formattedValue;
+
+                                    // Adjust the cursor position so it stays in the correct place
+                                    input.setSelectionRange(cursorPosition + cursorAdjustment, cursorPosition + cursorAdjustment);
+                                });
+                            }
 
                             function createTransactionRow() {
                                 const row = document.createElement("div");
@@ -110,41 +138,29 @@
                                 row.innerHTML = `
                                     <div class="col-span-4">
                                         <label for="details[${rowIndex}][particulars]" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Particulars</label>
-                                        <select name="details[${rowIndex}][particulars]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" >
+                                        <select name="details[${rowIndex}][particulars]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                             <option value="">Select category</option>
                                             <option value="Subsidy from National Government">Subsidy from National Government</option>
                                             <option value="Fund">Fund transfer</option>
                                             <option value="Advances to Officers and Employers">Advances to Officers and Employers</option>
                                             <option value="Other Payables">Other Payables</option>
                                         </select>
-                                        @error('details.${rowIndex}.particulars')
-                                            <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
-                                        @enderror
                                     </div>
                                     <div class="col-span-2">
                                         <label for="details[${rowIndex}][uacs_code]" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">UACS Code</label>
-                                        <input type="number" name="details[${rowIndex}][uacs_code]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                                        @error('details.${rowIndex}.uacs_code')
-                                            <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
-                                        @enderror
+                                        <input type="text" name="details[${rowIndex}][uacs_code]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                     </div>
                                     <div class="col-span-2">
                                         <label for="details[${rowIndex}][mode_of_payment]" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mode</label>
-                                        <select name="details[${rowIndex}][mode_of_payment]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" >
+                                        <select name="details[${rowIndex}][mode_of_payment]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                             <option value="">Mode of Payment</option>
                                             <option value="Credit">Credit</option>
                                             <option value="Debit">Debit</option>
                                         </select>
-                                        @error('details.${rowIndex}.mode_of_payment')
-                                            <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
-                                        @enderror
                                     </div>
                                     <div class="col-span-2">
                                         <label for="details[${rowIndex}][amount]" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount</label>
-                                        <input type="number" name="details[${rowIndex}][amount]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" >
-                                        @error('details.${rowIndex}.amount')
-                                            <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
-                                        @enderror
+                                        <input type="text" name="details[${rowIndex}][amount]" class="amount-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Enter amount">
                                     </div>
                                     <div class="col-span-1 flex justify-center">
                                         <button type="button" class="removeRowButton text-red-600 hover:text-red-800">
@@ -157,6 +173,10 @@
 
                                 container.appendChild(row);
 
+                                // Attach the formatting event listener to the new amount input
+                                const amountInput = row.querySelector('.amount-input');
+                                attachAmountInputEvent(amountInput);
+
                                 // Attach event listener to the remove button
                                 row.querySelector(".removeRowButton").addEventListener("click", function () {
                                     row.remove();
@@ -165,9 +185,19 @@
                                 rowIndex++; // Increment the row index for the next row
                             }
 
+                            // Attach event listener to the "Add Row" button
                             addRowButton.addEventListener("click", createTransactionRow);
+
+                            // Before form submission, remove commas from the amount fields
+                            form.addEventListener('submit', function () {
+                                const amountInputs = document.querySelectorAll('.amount-input');
+                                amountInputs.forEach(function (input) {
+                                    input.value = input.value.replace(/,/g, ''); // Remove commas before submission
+                                });
+                            });
                         });
                     </script>
+
                 </section>
 
             </div>

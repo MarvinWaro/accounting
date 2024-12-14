@@ -91,6 +91,7 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach($transactions as $transaction)
                                 <tr class="hover:bg-gray-200 dark:hover:bg-gray-700">
                                     <td>
                                         <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="text-gray-800 bg-transparent border border-gray-300 hover:text-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-transparent dark:border-gray-600 dark:text-gray-300 dark:hover:text-gray-400 dark:focus:ring-gray-800" type="button">Action
@@ -98,25 +99,14 @@
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
                                             </svg>
                                         </button>
-
                                         <!-- Dropdown menu -->
                                         <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
                                             <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-                                                <li>
-                                                    <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                                        <i class="fa-solid fa-eye me-2"></i>View
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a href="#!" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                                        <i class="fa-solid fa-pen-to-square me-2"></i>Edit
-                                                    </a>
-                                                </li>
+                                                <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><i class="fa-solid fa-eye me-2"></i>View</a></li>
+                                                <li><a href="#!" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><i class="fa-solid fa-pen-to-square me-2"></i>Edit</a></li>
                                                 <hr class="w-[90%] mx-auto">
                                                 <li>
-                                                    <!-- Unique class for each form to handle SweetAlert -->
-                                                    <form action="#!" method="POST" class="delete-form delete-form">
-                                                        <!-- Button styled to behave like a link -->
+                                                    <form action="#!" method="POST" class="delete-form">
                                                         <button type="submit" class="delete-button w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white flex items-center focus:outline-none">
                                                             <i class="fa-solid fa-trash me-2 text-red-500"></i><span class="text-red-500">Delete</span>
                                                         </button>
@@ -125,43 +115,46 @@
                                             </ul>
                                         </div>
                                     </td>
-                                    <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">2021/03/21</td>
-                                    <td>MSFT</td>
+                                    <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $transaction->transaction_date }}</td>
+                                    <td>{{ $transaction->jev_no }}</td>
                                     <td>
                                         <ul class="list-disc list-inside">
-                                            <li>Cash, MDS</li>
-                                            <li>Traveling Expenses-Local</li>
-                                            <li>Traveling Expenses-Global</li>
+                                            @foreach($transaction->details as $detail)
+                                                <li>{{ $detail->particulars }}</li>
+                                            @endforeach
                                         </ul>
                                     </td>
                                     <td>
                                         <ul class="list-disc list-inside">
-                                            <li>123-456-789</li>
-                                            <li>987-654-321</li>
-                                            <li>987-654-894</li>
+                                            @foreach($transaction->details as $detail)
+                                                <li>{{ $detail->uacs_code }}</li>
+                                            @endforeach
                                         </ul>
                                     </td>
                                     <td>
                                         <ul class="list-disc list-inside">
-                                            <li>Debit</li>
-                                            <li>Credit</li>
-                                            <li>Credit</li>
+                                            @foreach($transaction->details as $detail)
+                                                <li>{{ $detail->mode_of_payment }}</li>
+                                            @endforeach
                                         </ul>
                                     </td>
                                     <td>
                                         <ul class="list-disc list-inside">
-                                            <li>10,000.00</li>
-                                            <li>27,566.00</li>
-                                            <li>105,566.00</li>
+                                            @foreach($transaction->details as $detail)
+                                                <li>{{ number_format($detail->amount, 2) }}</li>
+                                            @endforeach
                                         </ul>
                                     </td>
-                                    <td>GJ</td>
-                                    <td>NTA-2401-002</td>
-                                    <td>Training expenses for team</td>
+                                    <td>{{ $transaction->ref }}</td>
+                                    <td>{{ $transaction->payee }}</td>
+                                    <td>{{ $transaction->description }}</td>
                                 </tr>
+                                @endforeach
                             </tbody>
+
                         </table>
                     </div>
+
                 </div>
             </div>
         </div>
