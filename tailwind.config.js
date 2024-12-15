@@ -39,9 +39,11 @@ export default {
         require('@tailwindcss/typography'),
         require('flowbite/plugin')({
             datatables: true, // Enable Flowbite datatables
+            charts: true,    // Enable Flowbite charts
         })
     ],
 };
+
 
 
 

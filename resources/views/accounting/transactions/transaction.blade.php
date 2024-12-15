@@ -4,12 +4,6 @@
             {{ __('Transaction') }}
         </h2>
 
-        <br>
-
-        <x-breadcrumbs :links="[
-            'Transactions' => route('transaction')
-        ]" />
-
     </x-slot>
 
     <div class="py-12">
@@ -93,3 +87,5 @@
     </div>
 
 </x-app-layout>
+
+
