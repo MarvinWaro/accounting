@@ -25,32 +25,36 @@ class TransactionController extends Controller
 
     public function store(Request $request)
     {
-        // Copy the details array to a separate variable
-        $details = $request->input('details');
-
         // Clean up the 'amount' fields by removing commas
-        foreach ($details as &$detail) {
-            $detail['amount'] = preg_replace('/,/', '', $detail['amount']); // Remove commas
+        if ($request->has('details')) {
+            $details = $request->input('details');
+
+            foreach ($details as &$detail) {
+                if (isset($detail['amount'])) {
+                    // Remove commas from the 'amount' field
+                    $detail['amount'] = preg_replace('/,/', '', $detail['amount']);
+                }
+            }
+
+            // Re-assign the cleaned 'details' array back to the request
+            $request->merge(['details' => $details]);
         }
 
-        // Merge the cleaned 'details' array back into the request
-        $request->merge(['details' => $details]);
-
-        // Validate the form data, including uniqueness for 'jev_no'
+        // Validate the form data, especially the 'details' array
         $validated = $request->validate([
             'transaction_date' => 'required|date',
-            'jev' => 'required|string|max:255|unique:transactions,jev_no', // Ensure 'jev_no' is unique
+            'jev' => 'required|string|max:255|unique:transactions,jev_no',
             'description' => 'nullable|string',
             'ref' => 'nullable|string|max:255',
             'payee' => 'required|string|max:255',
-            'details' => 'required|array|min:1', // Ensure at least one transaction detail is present
+            'details' => 'required|array|min:1',
             'details.*.particulars' => 'required|string|max:255',
-            'details.*.uacs_code' => 'required|string|max:255', // Changed from numeric to string
+            'details.*.uacs_code' => 'required|string',
             'details.*.mode_of_payment' => 'required|string|in:Credit,Debit',
-            'details.*.amount' => 'required|numeric|min:0|max:100000000000', // Validate amount as a number
+            'details.*.amount' => 'required|numeric|min:0|max:100000000000', // Make sure it's numeric
         ], [
             'details.required' => 'There is no transaction made.',
-            'details.min' => 'There is no transaction made.', // Custom message if no transactions
+            'details.min' => 'There is no transaction made.',
         ]);
 
         try {
@@ -70,7 +74,7 @@ class TransactionController extends Controller
             foreach ($validated['details'] as $detail) {
                 $transaction->details()->create([
                     'particulars' => $detail['particulars'],
-                    'uacs_code' => $detail['uacs_code'], // This should now correctly handle any format
+                    'uacs_code' => $detail['uacs_code'],
                     'mode_of_payment' => $detail['mode_of_payment'],
                     'amount' => $detail['amount'],
                 ]);
@@ -83,10 +87,11 @@ class TransactionController extends Controller
         } catch (\Exception $e) {
             // Rollback if any error occurs
             DB::rollBack();
-            // Return detailed error message
             return redirect()->back()->withErrors(['An error occurred while creating the transaction: ' . $e->getMessage()]);
         }
     }
+
+
 
 
 }

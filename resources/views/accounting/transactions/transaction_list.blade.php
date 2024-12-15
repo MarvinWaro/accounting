@@ -21,6 +21,7 @@
         border-radius: 5px;
         z-index: 1;
         }
+
     </style>
 
     <div class="py-12">
@@ -120,7 +121,9 @@
                                     <td>
                                         <ul class="list-disc list-inside">
                                             @foreach($transaction->details as $detail)
-                                                <li>{{ $detail->particulars }}</li>
+                                                <li class="particulars" data-fulltext="{{ $detail->particulars }}">
+                                                    {{ Str::limit($detail->particulars, 40) }}
+                                                </li>
                                             @endforeach
                                         </ul>
                                     </td>
@@ -147,7 +150,7 @@
                                     </td>
                                     <td>{{ $transaction->ref }}</td>
                                     <td>{{ $transaction->payee }}</td>
-                                    <td>{{ $transaction->description }}</td>
+                                    <td>{{ \Str::limit($transaction->description, 40, '...') }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
