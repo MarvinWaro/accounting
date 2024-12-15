@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->date('transaction_date');
-            $table->string('jev_no');
+            $table->string('jev_no')->unique(); // Add the unique constraint here
             $table->text('description')->nullable();
             $table->string('ref')->nullable();
             $table->string('payee');
@@ -34,4 +34,3 @@ return new class extends Migration {
         Schema::dropIfExists('transactions');
     }
 };
-

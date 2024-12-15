@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Transaction;
+use App\Models\Account;
 use App\Models\TransactionDetail;
 use Illuminate\Support\Facades\DB;
-
 
 class TransactionController extends Controller
 {
@@ -16,35 +16,36 @@ class TransactionController extends Controller
         return view('accounting.transactions.transaction_list', compact('transactions'));
     }
 
-
     public function create()
     {
-        return view('accounting.transactions.create_transaction');
+        // Fetch active accounts from the database
+        $accounts = Account::where('activate', 1)->get();
+        return view('accounting.transactions.create_transaction', compact('accounts'));
     }
 
     public function store(Request $request)
     {
-        // Create a new array to store the cleaned data
-        $details = $request->details;
+        // Copy the details array to a separate variable
+        $details = $request->input('details');
 
         // Clean up the 'amount' fields by removing commas
         foreach ($details as &$detail) {
             $detail['amount'] = preg_replace('/,/', '', $detail['amount']); // Remove commas
         }
 
-        // Re-assign the cleaned 'details' array back to the request
+        // Merge the cleaned 'details' array back into the request
         $request->merge(['details' => $details]);
 
-        // Validate the form data, especially the 'details' array
+        // Validate the form data, including uniqueness for 'jev_no'
         $validated = $request->validate([
             'transaction_date' => 'required|date',
-            'jev' => 'required|string|max:255',
+            'jev' => 'required|string|max:255|unique:transactions,jev_no', // Ensure 'jev_no' is unique
             'description' => 'nullable|string',
             'ref' => 'nullable|string|max:255',
             'payee' => 'required|string|max:255',
             'details' => 'required|array|min:1', // Ensure at least one transaction detail is present
             'details.*.particulars' => 'required|string|max:255',
-            'details.*.uacs_code' => 'required|numeric',
+            'details.*.uacs_code' => 'required|string|max:255', // Changed from numeric to string
             'details.*.mode_of_payment' => 'required|string|in:Credit,Debit',
             'details.*.amount' => 'required|numeric|min:0|max:100000000000', // Validate amount as a number
         ], [
@@ -69,7 +70,7 @@ class TransactionController extends Controller
             foreach ($validated['details'] as $detail) {
                 $transaction->details()->create([
                     'particulars' => $detail['particulars'],
-                    'uacs_code' => $detail['uacs_code'],
+                    'uacs_code' => $detail['uacs_code'], // This should now correctly handle any format
                     'mode_of_payment' => $detail['mode_of_payment'],
                     'amount' => $detail['amount'],
                 ]);
@@ -88,7 +89,4 @@ class TransactionController extends Controller
     }
 
 
-
-
 }
-
