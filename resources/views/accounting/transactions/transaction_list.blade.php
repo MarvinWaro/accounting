@@ -130,7 +130,7 @@
                                     <td>
                                         <ul class="list-disc list-inside">
                                             @foreach($transaction->details as $detail)
-                                                <li>{{ $detail->uacs_code }}</li>
+                                                <li>{{ substr($detail->uacs_code, 0, 1) . '-' . substr($detail->uacs_code, 1, 2) . '-' . substr($detail->uacs_code, 3, 2) . '-' . substr($detail->uacs_code, 5, 3) . '-' . substr($detail->uacs_code, 8, 2) }}</li>
                                             @endforeach
                                         </ul>
                                     </td>
@@ -163,6 +163,36 @@
         </div>
     </div>
 
+    <script>
+        $(document).ready(function() {
+            var table = $('#search-table').DataTable({
+                searchable: true,
+                sortable: false
+            });
+
+            // Custom search function
+            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                // Get the search term from the search input
+                var searchTerm = table.search().toLowerCase();
+
+                // Get the full text from data-fulltext attributes for "particulars" and "remarks"
+                var particulars = $('td .particulars', table.row(dataIndex).node()).data('fulltext').toLowerCase();
+                var remarks = $('td .remarks', table.row(dataIndex).node()).data('fulltext').toLowerCase();
+
+                // Check if the search term exists in either the fulltext attributes
+                if (particulars.indexOf(searchTerm) !== -1 || remarks.indexOf(searchTerm) !== -1) {
+                    return true; // Show the row
+                }
+
+                return false; // Otherwise, hide the row
+            });
+
+            // Trigger a redraw when the search is performed
+            $('#search-table_filter input').on('keyup', function() {
+                table.draw();
+            });
+        });
+    </script>
     <script>
         if (document.getElementById("search-table") && typeof simpleDatatables.DataTable !== 'undefined') {
             const dataTable = new simpleDatatables.DataTable("#search-table", {
