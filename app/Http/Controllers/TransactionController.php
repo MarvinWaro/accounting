@@ -18,7 +18,7 @@ class TransactionController extends Controller
 
     public function create()
     {
-        // Fetch active accounts from the database
+        // Fetch active accoun  ts from the database
         $accounts = Account::where('activate', 1)->get();
         return view('accounting.transactions.create_transaction', compact('accounts'));
     }

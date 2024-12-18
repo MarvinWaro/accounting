@@ -30,6 +30,5 @@
         <script src="{{ asset('js/main.js') }}"></script>
         <script src="//unpkg.com/alpinejs" defer></script>
 
-
 @include('partials._footer')
 

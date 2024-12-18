@@ -5,6 +5,48 @@
         </h2>
     </x-slot>
 
+
+    <!-- Add this CSS to override Select2 styling -->
+    <style>
+        .select2-container--default .select2-selection--single {
+            background-color: #f8fafc; /* Light background */
+            border-color: #d1d5db; /* Gray border */
+            height: 42px; /* Match other inputs */
+            padding: 0.625rem; /* Match padding */
+            border-radius: 0.5rem; /* Rounded corners like Tailwind */
+            font-size: 0.875rem; /* Font size */
+            color: #1f2937; /* Text color */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* Small shadow */
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 1.25rem; /* Vertical alignment of text */
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            top: 10px; /* Arrow positioning */
+            right: 10px; /* Align arrow with Tailwind style */
+        }
+
+        .select2-dropdown {
+            background-color: #f8fafc; /* Dropdown background */
+            border-radius: 0.5rem; /* Rounded dropdown corners */
+            border: 1px solid #d1d5db; /* Match border */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); /* Box shadow */
+        }
+
+        .select2-results__option {
+            padding: 0.5rem 1rem; /* Option padding */
+            font-size: 0.875rem; /* Font size */
+            color: #1f2937; /* Option text color */
+        }
+
+        .select2-results__option--highlighted {
+            background-color: #3b82f6; /* Highlighted option background */
+            color: white; /* Highlighted text color */
+        }
+    </style>
+
     <div class="py-12">
         <div class="mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
@@ -58,7 +100,6 @@
                                     </button>
                                 </div>
 
-
                                 <div class="w-full">
                                     <label for="ref" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ref</label>
                                     <input type="text" name="ref" id="ref" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
@@ -96,13 +137,12 @@
                         </form>
                     </div>
 
-                    {{-- Script for new transaction --}}
-
                     <script>
                         // Pass the accounts array from PHP to JavaScript
                         const accounts = @json($accounts);
                     </script>
 
+                    <!-- Updated Script -->
                     <script>
                         document.addEventListener("DOMContentLoaded", function () {
                             const container = document.getElementById("transaction-fields-container");
@@ -121,7 +161,7 @@
                             }
 
                             function attachAmountInputEvent(input) {
-                                input.addEventListener('input', function (e) {
+                                input.addEventListener('input', function () {
                                     const rawValue = input.value.replace(/[^\d.]/g, '');
                                     const formattedValue = formatNumberWithCommas(rawValue);
                                     const cursorPosition = input.selectionStart;
@@ -183,7 +223,11 @@
                                 const particularsSelect = row.querySelector('.particulars-select');
                                 const uacsCodeInput = row.querySelector('.uacs-code-input');
 
-                                particularsSelect.addEventListener('change', function () {
+                                // Initialize Select2
+                                $(particularsSelect).select2();
+
+                                // Listen for Select2 'select' event
+                                $(particularsSelect).on('select2:select', function () {
                                     const selectedParticular = particularsSelect.value;
                                     const account = accounts.find(account => account.description === selectedParticular);
 
@@ -206,7 +250,6 @@
                             });
                         });
                     </script>
-
 
 
                 </section>
