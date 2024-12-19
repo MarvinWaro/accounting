@@ -163,27 +163,58 @@
                             const form = document.querySelector('form');
                             let rowIndex = 0;
 
-                            // Pass accounts and transaction details from PHP to JavaScript
                             const accounts = @json($accounts);
                             const details = @json($transaction->details);
 
-                            // Attach input event for formatting amount fields manually
+                            // Function to format number with commas as user types
+                            function formatAmount(value) {
+                                let rawValue = value.replace(/,/g, ''); // Remove commas
+                                let cleanedValue = rawValue.replace(/\D/g, ''); // Remove non-digits
+
+                                // Ensure we always have at least 2 decimal places
+                                if (cleanedValue.length === 0) {
+                                    cleanedValue = '000'; // default value when empty input
+                                } else if (cleanedValue.length === 1) {
+                                    cleanedValue = '00' + cleanedValue;
+                                } else if (cleanedValue.length === 2) {
+                                    cleanedValue = '0' + cleanedValue;
+                                }
+
+                                const integerPart = cleanedValue.slice(0, -2); // Get everything before the last two digits
+                                const decimalPart = cleanedValue.slice(-2); // Get last two digits as the decimal part
+
+                                // Format the integer part with commas
+                                const formattedIntegerPart = parseInt(integerPart, 10).toLocaleString();
+
+                                // Combine integer and decimal parts
+                                return `${formattedIntegerPart}.${decimalPart}`;
+                            }
+
+                            // Attach input event for ATM-like behavior
                             function attachAmountInputEvent(input) {
                                 input.addEventListener('input', function () {
-                                    // Allow user to input commas manually, but do not add automatic commas
+                                    let value = input.value.replace(/,/g, ''); // Remove commas
+                                    value = formatAmount(value);
+                                    input.value = value;
+                                });
+
+                                // Ensure cursor stays at the end of the input field
+                                input.addEventListener('focus', function () {
+                                    setTimeout(function () {
+                                        input.selectionStart = input.selectionEnd = input.value.length;
+                                    }, 0);
                                 });
                             }
 
-                            // Create a new row for the transaction details
+                            // Create a new transaction row
                             function createTransactionRow(detail = null) {
                                 const row = document.createElement("div");
                                 row.classList.add("sm:col-span-3", "grid", "grid-cols-11", "gap-5", "items-end");
 
-                                // Get values for edit, or default for create
                                 const particulars = detail ? detail.particulars : '';
                                 const uacsCode = detail ? detail.uacs_code : '';
                                 const modeOfPayment = detail ? detail.mode_of_payment : '';
-                                const amount = detail ? detail.amount : ''; // No commas here initially
+                                const amount = detail ? formatAmount(detail.amount.toString()) : '0.09'; // Start with '0.09'
 
                                 row.innerHTML = `
                                     <div class="col-span-4">
@@ -220,50 +251,47 @@
 
                                 container.appendChild(row);
 
-                                // Attach the event listener for amount input (no formatting here)
                                 const amountInput = row.querySelector('.amount-input');
                                 attachAmountInputEvent(amountInput);
 
-                                // Attach event listener to the remove button
                                 row.querySelector(".removeRowButton").addEventListener("click", function () {
                                     row.remove();
                                 });
 
-                                // Handle particulars selection and fill UACS code
                                 const particularsSelect = row.querySelector('.particulars-select');
                                 const uacsCodeInput = row.querySelector('.uacs-code-input');
 
-                                // Initialize Select2
                                 $(particularsSelect).select2();
 
-                                // Listen for Select2 'select' event
                                 $(particularsSelect).on('select2:select', function () {
                                     const selectedParticular = particularsSelect.value;
                                     const account = accounts.find(account => account.description === selectedParticular);
-                                    // Set the UACS code input value
                                     uacsCodeInput.value = account ? account.account_no : '';
                                 });
 
                                 rowIndex++;
                             }
 
-                            // Pre-populate rows with existing transaction details
                             details.forEach(detail => {
                                 createTransactionRow(detail);
                             });
 
-                            // Attach event listener to the "Add Row" button for adding new blank rows
                             addRowButton.addEventListener("click", () => createTransactionRow());
 
-                            // Before form submission, remove commas from the amount fields
                             form.addEventListener('submit', function () {
                                 const amountInputs = document.querySelectorAll('.amount-input');
                                 amountInputs.forEach(function (input) {
-                                    input.value = input.value.replace(/,/g, ''); // Remove commas before submission
+                                    // Remove commas before submission
+                                    input.value = input.value.replace(/,/g, ''); // Remove commas
+                                    // Ensure the value is a valid number (this ensures it passes validation)
+                                    input.value = parseFloat(input.value).toFixed(2); // Ensure 2 decimal places
+                                    console.log('Cleaned amount:', input.value); // Debug log
                                 });
                             });
                         });
                     </script>
+
+
 
                 </section>
 
