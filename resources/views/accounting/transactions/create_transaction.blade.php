@@ -6,46 +6,72 @@
     </x-slot>
 
 
-    <!-- Add this CSS to override Select2 styling -->
+    <!-- Add this CSS for light mode and dark mode compatibility -->
     <style>
+        /* Light mode (default) */
         .select2-container--default .select2-selection--single {
             background-color: #f8fafc; /* Light background */
             border-color: #d1d5db; /* Gray border */
-            height: 42px; /* Match other inputs */
-            padding: 0.625rem; /* Match padding */
-            border-radius: 0.5rem; /* Rounded corners like Tailwind */
-            font-size: 0.875rem; /* Font size */
             color: #1f2937; /* Text color */
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* Small shadow */
+            height: 42px; /* Same height as Tailwind input */
+            padding: 0.625rem; /* Match padding */
+            border-radius: 0.5rem; /* Rounded corners */
+            font-size: 0.875rem;
         }
 
         .select2-container--default .select2-selection--single .select2-selection__rendered {
-            line-height: 1.25rem; /* Vertical alignment of text */
+            line-height: 1.25rem;
         }
 
         .select2-container--default .select2-selection--single .select2-selection__arrow {
-            top: 10px; /* Arrow positioning */
-            right: 10px; /* Align arrow with Tailwind style */
+            top: 10px;
+            right: 10px;
         }
 
         .select2-dropdown {
-            background-color: #f8fafc; /* Dropdown background */
-            border-radius: 0.5rem; /* Rounded dropdown corners */
-            border: 1px solid #d1d5db; /* Match border */
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); /* Box shadow */
+            background-color: #f8fafc; /* Dropdown background for light mode */
+            border-radius: 0.5rem;
+            border: 1px solid #d1d5db;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
         .select2-results__option {
-            padding: 0.5rem 1rem; /* Option padding */
-            font-size: 0.875rem; /* Font size */
-            color: #1f2937; /* Option text color */
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            color: #1f2937;
         }
 
         .select2-results__option--highlighted {
-            background-color: #3b82f6; /* Highlighted option background */
-            color: white; /* Highlighted text color */
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        /* Dark mode */
+        .dark .select2-container--default .select2-selection--single {
+            background-color: #374151; /* Dark background for input */
+            border-color: #4b5563; /* Dark border */
+            color: #f9fafb; /* Light text */
+        }
+
+        .dark .select2-dropdown {
+            background-color: #374151; /* Dropdown background for dark mode */
+            border-color: #4b5563;
+        }
+
+        .dark .select2-results__option {
+            color: #f9fafb; /* Light text color for options */
+        }
+
+        .dark .select2-results__option--highlighted {
+            background-color: #2563eb; /* Darker highlight */
+            color: white;
+        }
+
+        .dark .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: white; /* Make the text inside the select field white in dark mode */
         }
     </style>
+
 
     <div class="py-12">
         <div class="mx-auto sm:px-6 lg:px-8">
