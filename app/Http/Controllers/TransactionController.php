@@ -22,7 +22,7 @@ class TransactionController extends Controller
         $accounts = Account::where('activate', 1)->get();
         return view('accounting.transactions.create_transaction', compact('accounts'));
     }
-    
+
     public function store(Request $request)
     {
         if ($request->has('details')) {
@@ -82,8 +82,6 @@ class TransactionController extends Controller
             return redirect()->back()->withErrors(['An error occurred: ' . $e->getMessage()]);
         }
     }
-
-
 
     public function edit($id)
     {

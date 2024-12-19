@@ -173,13 +173,38 @@
                             // Attach input event listener to handle amount input
                             function attachAmountInputEvent(input) {
                                 input.addEventListener('input', function () {
-                                    let rawValue = input.value;
+                                    let rawValue = input.value.replace(/,/g, ''); // Remove commas
+                                    let cleanedValue = rawValue.replace(/\D/g, ''); // Remove non-digits
 
-                                    // Allow user to type only numbers, commas, and a period (no other characters)
-                                    rawValue = rawValue.replace(/[^0-9,\.]/g, '');
+                                    // Ensure we always have at least 2 decimal places
+                                    if (cleanedValue.length === 0) {
+                                        cleanedValue = '000'; // default value when empty input
+                                    } else if (cleanedValue.length === 1) {
+                                        cleanedValue = '00' + cleanedValue;
+                                    } else if (cleanedValue.length === 2) {
+                                        cleanedValue = '0' + cleanedValue;
+                                    }
 
-                                    // Allow manual input of commas and periods, no automatic formatting
-                                    input.value = rawValue;
+                                    const integerPart = cleanedValue.slice(0, -2); // Get everything before the last two digits
+                                    const decimalPart = cleanedValue.slice(-2); // Get last two digits as the decimal part
+
+                                    // Format the integer part with commas
+                                    const formattedIntegerPart = parseInt(integerPart, 10).toLocaleString();
+
+                                    // Combine integer and decimal parts
+                                    input.value = `${formattedIntegerPart}.${decimalPart}`;
+                                });
+
+                                input.addEventListener('keydown', function (event) {
+                                    if (event.key === "Backspace") {
+                                        let rawValue = input.value.replace(/,/g, ''); // Remove commas
+                                        let cleanedValue = rawValue.replace(/\D/g, ''); // Remove non-digits
+
+                                        if (cleanedValue.length <= 3) {
+                                            input.value = '0.00'; // Reset to 0.00 when deleting all numbers
+                                            event.preventDefault(); // Prevent default backspace behavior
+                                        }
+                                    }
                                 });
                             }
 
@@ -210,7 +235,7 @@
                                     </div>
                                     <div class="col-span-2">
                                         <label for="details[${rowIndex}][amount]" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount</label>
-                                        <input type="text" name="details[${rowIndex}][amount]" class="amount-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Enter amount">
+                                        <input type="text" name="details[${rowIndex}][amount]" class="amount-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="0.00">
                                     </div>
                                     <div class="col-span-1 flex justify-center mb-3">
                                         <button type="button" class="removeRowButton text-red-600 hover:text-red-800">
@@ -264,6 +289,9 @@
                             });
                         });
                     </script>
+
+
+
                 </section>
 
             </div>

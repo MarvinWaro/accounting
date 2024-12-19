@@ -167,23 +167,10 @@
                             const accounts = @json($accounts);
                             const details = @json($transaction->details);
 
-                            // Format number with commas
-                            function formatNumberWithCommas(value) {
-                                value = value.replace(/[^\d.]/g, ''); // Remove anything that's not a number or dot
-                                const parts = value.split('.');
-                                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ','); // Add commas
-                                return parts.join('.'); // Rejoin the decimal part if exists
-                            }
-
-                            // Attach input event for formatting amount fields
+                            // Attach input event for formatting amount fields manually
                             function attachAmountInputEvent(input) {
                                 input.addEventListener('input', function () {
-                                    let rawValue = input.value.replace(/[^\d.]/g, ''); // Remove non-numeric characters except period
-                                    const formattedValue = formatNumberWithCommas(rawValue); // Apply commas formatting
-                                    const cursorPosition = input.selectionStart; // Get current cursor position
-                                    const cursorAdjustment = formattedValue.length - rawValue.length;
-                                    input.value = formattedValue;
-                                    input.setSelectionRange(cursorPosition + cursorAdjustment, cursorPosition + cursorAdjustment); // Adjust cursor position
+                                    // Allow user to input commas manually, but do not add automatic commas
                                 });
                             }
 
@@ -233,7 +220,7 @@
 
                                 container.appendChild(row);
 
-                                // Attach the formatting event listener to the new amount input
+                                // Attach the event listener for amount input (no formatting here)
                                 const amountInput = row.querySelector('.amount-input');
                                 attachAmountInputEvent(amountInput);
 
@@ -277,8 +264,6 @@
                             });
                         });
                     </script>
-
-
 
                 </section>
 
