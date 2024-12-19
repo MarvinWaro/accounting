@@ -94,7 +94,20 @@ class TransactionController extends Controller
 
     public function update(Request $request, $id)
     {
-        // Validate and process request data like in the store method
+        // Remove commas and clean 'amount' values before validation
+        if ($request->has('details')) {
+            $details = $request->input('details');
+            foreach ($details as &$detail) {
+                if (isset($detail['amount'])) {
+                    // Remove commas from the 'amount' field
+                    $detail['amount'] = preg_replace('/,/', '', $detail['amount']);
+                    // Convert amount to a float (or decimal)
+                    $detail['amount'] = (float) $detail['amount'];
+                }
+            }
+            $request->merge(['details' => $details]); // Merge cleaned data back into the request
+        }
+
         $validated = $request->validate([
             'transaction_date' => 'required|date',
             'jev' => 'required|string|max:255|unique:transactions,jev_no,' . $id,
@@ -103,13 +116,12 @@ class TransactionController extends Controller
             'payee' => 'required|string|max:255',
             'details' => 'required|array|min:1',
             'details.*.particulars' => 'required|string|max:255',
-            'details.*.uacs_code' => 'required|string',
+            'details.*.uacs_code' => 'required|string|max:255',
             'details.*.mode_of_payment' => 'required|string|in:Credit,Debit',
             'details.*.amount' => 'required|numeric|min:0|max:100000000000',
         ]);
 
         try {
-            // Start the transaction
             DB::beginTransaction();
 
             // Update the transaction main data
@@ -125,17 +137,17 @@ class TransactionController extends Controller
             // Remove all existing details first
             $transaction->details()->delete();
 
-            // Insert new details
+            // Insert new details after removing commas from amount
             foreach ($validated['details'] as $detail) {
+                // Ensure the amount is already cleaned and converted to a float
                 $transaction->details()->create([
                     'particulars' => $detail['particulars'],
                     'uacs_code' => $detail['uacs_code'],
                     'mode_of_payment' => $detail['mode_of_payment'],
-                    'amount' => $detail['amount'],
+                    'amount' => $detail['amount'],  // Store the cleaned numeric value
                 ]);
             }
 
-            // Commit transaction
             DB::commit();
 
             return redirect()->route('transaction.index')->with('success', 'Transaction updated successfully!');
@@ -144,7 +156,6 @@ class TransactionController extends Controller
             return redirect()->back()->withErrors(['An error occurred while updating the transaction: ' . $e->getMessage()]);
         }
     }
-
 
 
 }

@@ -281,12 +281,15 @@
                             form.addEventListener('submit', function () {
                                 const amountInputs = document.querySelectorAll('.amount-input');
                                 amountInputs.forEach(function (input) {
-                                    input.value = input.value.replace(/,/g, ''); // Remove commas before submission
+                                    // Remove commas before submission
+                                    input.value = input.value.replace(/,/g, ''); // Remove commas
+                                    // Ensure the value is a valid number (this ensures it passes validation)
+                                    input.value = parseFloat(input.value).toFixed(2); // Ensure 2 decimal places
+                                    console.log('Cleaned amount:', input.value); // Debug log
                                 });
                             });
                         });
                     </script>
-
 
 
 
