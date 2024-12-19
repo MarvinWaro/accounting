@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Create Transaction') }}
+            {{ __('Edit Transaction') }}
         </h2>
     </x-slot>
 
@@ -87,13 +87,15 @@
 
                 <section>
                     <div class="max-w-7xl mx-auto py-8 px-4 lg:py-16">
-                        <h2 class="mb-8 text-xl font-bold text-gray-900 dark:text-white">Add New Entry</h2>
-                        <form action="{{ route('transaction.store') }}" method="POST">
+                        <h2 class="mb-8 text-xl font-bold text-gray-900 dark:text-white">Edit Transaction</h2>
+                        <form action="{{ route('transaction.update', $transaction->id) }}" method="POST">
                             @csrf
+                            @method('PUT')
+
                             <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
                                 <div class="w-full">
                                     <label for="transaction_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date</label>
-                                    <input type="date" name="transaction_date" id="transaction_date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" >
+                                    <input type="date" name="transaction_date" id="transaction_date" value="{{ old('transaction_date', $transaction->transaction_date) }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                     @error('transaction_date')
                                         <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
                                     @enderror
@@ -101,17 +103,16 @@
 
                                 <div class="w-full">
                                     <label for="jev" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">JEV No</label>
-                                    <input type="text" name="jev" id="jev" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" >
+                                    <input type="text" name="jev" id="jev" value="{{ old('jev', $transaction->jev_no) }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                     @error('jev')
                                         <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
                                     @enderror
                                 </div>
 
                                 <div id="transaction-fields-container" class="sm:col-span-2 space-y-4">
-                                    <!-- Dynamic Fields Will Be Added Here -->
+                                    <!-- Transaction detail rows will be populated here dynamically using JavaScript -->
                                 </div>
 
-                                <!-- Button to Add New Transaction Row -->
                                 <div class="col-span-full mt-4">
                                     <button type="button" id="addRowButton" class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
                                         <div class="button-wrapper flex items-center justify-center">
@@ -125,7 +126,7 @@
 
                                 <div class="w-full">
                                     <label for="ref" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ref</label>
-                                    <input type="text" name="ref" id="ref" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                    <input type="text" name="ref" id="ref" value="{{ old('ref', $transaction->ref) }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                     @error('ref')
                                         <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
                                     @enderror
@@ -133,7 +134,7 @@
 
                                 <div class="w-full">
                                     <label for="payee" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Payee</label>
-                                    <input type="text" name="payee" id="payee" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                                    <input type="text" name="payee" id="payee" value="{{ old('payee', $transaction->payee) }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                     @error('payee')
                                         <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
                                     @enderror
@@ -141,21 +142,16 @@
 
                                 <div class="sm:col-span-2">
                                     <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
-                                    <textarea id="description" name="description" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Your description here"></textarea>
+                                    <textarea id="description" name="description" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Your description here">{{ old('description', $transaction->description) }}</textarea>
                                     @error('description')
                                         <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
 
-                            <!-- Submit Button Section -->
                             <div class="flex justify-end gap-4 mt-10">
-                                <a href="{{ route('transaction.index') }}" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-center text-white bg-secondary-600 rounded-lg hover:bg-secondary-700 focus:ring-2 focus:ring-secondary-200 dark:text-white dark:bg-secondary-800 dark:hover:bg-secondary-900 dark:focus:ring-secondary-900">
-                                    Back
-                                </a>
-                                <button type="submit" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-center text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-2 focus:ring-primary-200 dark:focus:ring-primary-900">
-                                    Save Entry
-                                </button>
+                                <a href="{{ route('transaction.index') }}" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-center text-white bg-secondary-600 rounded-lg hover:bg-secondary-700 focus:ring-2 focus:ring-secondary-200 dark:text-white dark:bg-secondary-800 dark:hover:bg-secondary-900 dark:focus:ring-secondary-900">Back</a>
+                                <button type="submit" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-center text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-2 focus:ring-primary-200 dark:focus:ring-primary-900">Update Entry</button>
                             </div>
                         </form>
                     </div>
@@ -167,75 +163,51 @@
                             const form = document.querySelector('form');
                             let rowIndex = 0;
 
-                            // Pass accounts from PHP to JavaScript
+                            // Pass accounts and transaction details from PHP to JavaScript
                             const accounts = @json($accounts);
+                            const details = @json($transaction->details);
 
-                            // Attach input event listener to handle amount input
+                            // Attach input event for formatting amount fields manually
                             function attachAmountInputEvent(input) {
                                 input.addEventListener('input', function () {
-                                    let rawValue = input.value.replace(/,/g, ''); // Remove commas
-                                    let cleanedValue = rawValue.replace(/\D/g, ''); // Remove non-digits
-
-                                    // Ensure we always have at least 2 decimal places
-                                    if (cleanedValue.length === 0) {
-                                        cleanedValue = '000'; // default value when empty input
-                                    } else if (cleanedValue.length === 1) {
-                                        cleanedValue = '00' + cleanedValue;
-                                    } else if (cleanedValue.length === 2) {
-                                        cleanedValue = '0' + cleanedValue;
-                                    }
-
-                                    const integerPart = cleanedValue.slice(0, -2); // Get everything before the last two digits
-                                    const decimalPart = cleanedValue.slice(-2); // Get last two digits as the decimal part
-
-                                    // Format the integer part with commas
-                                    const formattedIntegerPart = parseInt(integerPart, 10).toLocaleString();
-
-                                    // Combine integer and decimal parts
-                                    input.value = `${formattedIntegerPart}.${decimalPart}`;
-                                });
-
-                                input.addEventListener('keydown', function (event) {
-                                    if (event.key === "Backspace") {
-                                        let rawValue = input.value.replace(/,/g, ''); // Remove commas
-                                        let cleanedValue = rawValue.replace(/\D/g, ''); // Remove non-digits
-
-                                        if (cleanedValue.length <= 3) {
-                                            input.value = '0.00'; // Reset to 0.00 when deleting all numbers
-                                            event.preventDefault(); // Prevent default backspace behavior
-                                        }
-                                    }
+                                    // Allow user to input commas manually, but do not add automatic commas
                                 });
                             }
 
-                            // Create a new transaction row
-                            function createTransactionRow() {
+                            // Create a new row for the transaction details
+                            function createTransactionRow(detail = null) {
                                 const row = document.createElement("div");
                                 row.classList.add("sm:col-span-3", "grid", "grid-cols-11", "gap-5", "items-end");
+
+                                // Get values for edit, or default for create
+                                const particulars = detail ? detail.particulars : '';
+                                const uacsCode = detail ? detail.uacs_code : '';
+                                const modeOfPayment = detail ? detail.mode_of_payment : '';
+                                const amount = detail ? detail.amount : ''; // No commas here initially
 
                                 row.innerHTML = `
                                     <div class="col-span-4">
                                         <label for="details[${rowIndex}][particulars]" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Particulars</label>
                                         <select name="details[${rowIndex}][particulars]" class="particulars-select bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                             <option value="">Select Particulars</option>
-                                            ${accounts.map(account => `<option value="${account.description}">${account.description}</option>`).join('')}
+                                            ${accounts.map(account => `<option value="${account.description}" ${account.description === particulars ? 'selected' : ''}>${account.description}</option>`).join('')}
                                         </select>
                                     </div>
                                     <div class="col-span-2">
                                         <label for="details[${rowIndex}][uacs_code]" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">UACS Code</label>
-                                        <input type="text" name="details[${rowIndex}][uacs_code]" class="uacs-code-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" readonly>
+                                        <input type="text" name="details[${rowIndex}][uacs_code]" class="uacs-code-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="${uacsCode}" readonly>
                                     </div>
                                     <div class="col-span-2">
                                         <label for="details[${rowIndex}][mode_of_payment]" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Normal Balance</label>
                                         <select name="details[${rowIndex}][mode_of_payment]" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                             <option value="">Select Normal Balance</option>
-                                            <option value="Credit">Credit</option>
-                                            <option value="Debit">Debit</option>
+                                            <option value="Credit" ${modeOfPayment === 'Credit' ? 'selected' : ''}>Credit</option>
+                                            <option value="Debit" ${modeOfPayment === 'Debit' ? 'selected' : ''}>Debit</option>
                                         </select>
                                     </div>
                                     <div class="col-span-2">
                                         <label for="details[${rowIndex}][amount]" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Amount</label>
-                                        <input type="text" name="details[${rowIndex}][amount]" class="amount-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="0.00">
+                                        <input type="text" name="details[${rowIndex}][amount]" class="amount-input bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" value="${amount}" placeholder="Enter amount">
                                     </div>
                                     <div class="col-span-1 flex justify-center mb-3">
                                         <button type="button" class="removeRowButton text-red-600 hover:text-red-800">
@@ -248,11 +220,11 @@
 
                                 container.appendChild(row);
 
-                                // Attach the amount input event listener
+                                // Attach the event listener for amount input (no formatting here)
                                 const amountInput = row.querySelector('.amount-input');
                                 attachAmountInputEvent(amountInput);
 
-                                // Attach event listener to remove row
+                                // Attach event listener to the remove button
                                 row.querySelector(".removeRowButton").addEventListener("click", function () {
                                     row.remove();
                                 });
@@ -268,7 +240,6 @@
                                 $(particularsSelect).on('select2:select', function () {
                                     const selectedParticular = particularsSelect.value;
                                     const account = accounts.find(account => account.description === selectedParticular);
-
                                     // Set the UACS code input value
                                     uacsCodeInput.value = account ? account.account_no : '';
                                 });
@@ -276,21 +247,23 @@
                                 rowIndex++;
                             }
 
-                            // Attach event listener to the "Add Row" button
-                            addRowButton.addEventListener("click", createTransactionRow);
+                            // Pre-populate rows with existing transaction details
+                            details.forEach(detail => {
+                                createTransactionRow(detail);
+                            });
+
+                            // Attach event listener to the "Add Row" button for adding new blank rows
+                            addRowButton.addEventListener("click", () => createTransactionRow());
 
                             // Before form submission, remove commas from the amount fields
                             form.addEventListener('submit', function () {
                                 const amountInputs = document.querySelectorAll('.amount-input');
                                 amountInputs.forEach(function (input) {
-                                    // Remove commas before submitting, but keep the decimal point intact
-                                    input.value = input.value.replace(/,/g, '');
+                                    input.value = input.value.replace(/,/g, ''); // Remove commas before submission
                                 });
                             });
                         });
                     </script>
-
-
 
                 </section>
 

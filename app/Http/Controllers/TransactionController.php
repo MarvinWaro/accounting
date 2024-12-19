@@ -18,46 +18,45 @@ class TransactionController extends Controller
 
     public function create()
     {
-        // Fetch active accounts from the database
+        // Fetch active accoun  ts from the database
         $accounts = Account::where('activate', 1)->get();
         return view('accounting.transactions.create_transaction', compact('accounts'));
     }
 
     public function store(Request $request)
     {
-        // Copy the details array to a separate variable
-        $details = $request->input('details');
+        if ($request->has('details')) {
+            $details = $request->input('details');
 
-        // Clean up the 'amount' fields by removing commas
-        foreach ($details as &$detail) {
-            $detail['amount'] = preg_replace('/,/', '', $detail['amount']); // Remove commas
+            foreach ($details as &$detail) {
+                if (isset($detail['amount'])) {
+                    // Remove commas from the 'amount' field
+                    $detail['amount'] = preg_replace('/,/', '', $detail['amount']);
+                    // Convert amount to a float (or decimal) and ensure two decimal places
+                    $detail['amount'] = (float) $detail['amount'];
+                }
+            }
+
+            // Re-assign the cleaned 'details' array back to the request
+            $request->merge(['details' => $details]);
         }
 
-        // Merge the cleaned 'details' array back into the request
-        $request->merge(['details' => $details]);
-
-        // Validate the form data, including uniqueness for 'jev_no'
         $validated = $request->validate([
             'transaction_date' => 'required|date',
-            'jev' => 'required|string|max:255|unique:transactions,jev_no', // Ensure 'jev_no' is unique
+            'jev' => 'required|string|max:255|unique:transactions,jev_no',
             'description' => 'nullable|string',
             'ref' => 'nullable|string|max:255',
             'payee' => 'required|string|max:255',
-            'details' => 'required|array|min:1', // Ensure at least one transaction detail is present
+            'details' => 'required|array|min:1',
             'details.*.particulars' => 'required|string|max:255',
-            'details.*.uacs_code' => 'required|string|max:255', // Changed from numeric to string
+            'details.*.uacs_code' => 'required|string|max:255',
             'details.*.mode_of_payment' => 'required|string|in:Credit,Debit',
-            'details.*.amount' => 'required|numeric|min:0|max:100000000000', // Validate amount as a number
-        ], [
-            'details.required' => 'There is no transaction made.',
-            'details.min' => 'There is no transaction made.', // Custom message if no transactions
+            'details.*.amount' => 'required|numeric|min:0|max:100000000000',
         ]);
 
         try {
-            // Begin database transaction
             DB::beginTransaction();
 
-            // Create the main transaction
             $transaction = Transaction::create([
                 'transaction_date' => $validated['transaction_date'],
                 'jev_no' => $validated['jev'],
@@ -66,27 +65,86 @@ class TransactionController extends Controller
                 'payee' => $validated['payee'],
             ]);
 
-            // Create transaction details
             foreach ($validated['details'] as $detail) {
                 $transaction->details()->create([
                     'particulars' => $detail['particulars'],
-                    'uacs_code' => $detail['uacs_code'], // This should now correctly handle any format
+                    'uacs_code' => $detail['uacs_code'],
+                    'mode_of_payment' => $detail['mode_of_payment'],
+                    'amount' => $detail['amount'], // This will now be a decimal value
+                ]);
+            }
+
+            DB::commit();
+
+            return redirect()->route('transaction.index')->with('success', 'Transaction created successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withErrors(['An error occurred: ' . $e->getMessage()]);
+        }
+    }
+
+    public function edit($id)
+    {
+        $transaction = Transaction::findOrFail($id);
+        $accounts = Account::all(); // Assuming you're fetching the accounts from the database
+
+        // Pass transaction details to the view
+        return view('accounting.transactions.edit_transaction', compact('transaction', 'accounts'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        // Validate and process request data like in the store method
+        $validated = $request->validate([
+            'transaction_date' => 'required|date',
+            'jev' => 'required|string|max:255|unique:transactions,jev_no,' . $id,
+            'description' => 'nullable|string',
+            'ref' => 'nullable|string|max:255',
+            'payee' => 'required|string|max:255',
+            'details' => 'required|array|min:1',
+            'details.*.particulars' => 'required|string|max:255',
+            'details.*.uacs_code' => 'required|string',
+            'details.*.mode_of_payment' => 'required|string|in:Credit,Debit',
+            'details.*.amount' => 'required|numeric|min:0|max:100000000000',
+        ]);
+
+        try {
+            // Start the transaction
+            DB::beginTransaction();
+
+            // Update the transaction main data
+            $transaction = Transaction::findOrFail($id);
+            $transaction->update([
+                'transaction_date' => $validated['transaction_date'],
+                'jev_no' => $validated['jev'],
+                'description' => $validated['description'],
+                'ref' => $validated['ref'],
+                'payee' => $validated['payee'],
+            ]);
+
+            // Remove all existing details first
+            $transaction->details()->delete();
+
+            // Insert new details
+            foreach ($validated['details'] as $detail) {
+                $transaction->details()->create([
+                    'particulars' => $detail['particulars'],
+                    'uacs_code' => $detail['uacs_code'],
                     'mode_of_payment' => $detail['mode_of_payment'],
                     'amount' => $detail['amount'],
                 ]);
             }
 
-            // Commit the transaction if everything is fine
+            // Commit transaction
             DB::commit();
 
-            return redirect()->route('transaction.index')->with('success', 'Transaction created successfully!');
+            return redirect()->route('transaction.index')->with('success', 'Transaction updated successfully!');
         } catch (\Exception $e) {
-            // Rollback if any error occurs
             DB::rollBack();
-            // Return detailed error message
-            return redirect()->back()->withErrors(['An error occurred while creating the transaction: ' . $e->getMessage()]);
+            return redirect()->back()->withErrors(['An error occurred while updating the transaction: ' . $e->getMessage()]);
         }
     }
+
 
 
 }

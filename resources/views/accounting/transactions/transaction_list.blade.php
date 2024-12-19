@@ -21,6 +21,7 @@
         border-radius: 5px;
         z-index: 1;
         }
+
     </style>
 
     <div class="py-12">
@@ -94,23 +95,20 @@
                                 @foreach($transactions as $transaction)
                                 <tr class="hover:bg-gray-200 dark:hover:bg-gray-700">
                                     <td>
-                                        <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="text-gray-800 bg-transparent border border-gray-300 hover:text-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-transparent dark:border-gray-600 dark:text-gray-300 dark:hover:text-gray-400 dark:focus:ring-gray-800" type="button">Action
+                                        <button id="dropdownButton_{{ $transaction->id }}" data-dropdown-toggle="dropdown_{{ $transaction->id }}" class="text-gray-800 bg-transparent border border-gray-300 hover:text-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-transparent dark:border-gray-600 dark:text-gray-300 dark:hover:text-gray-400 dark:focus:ring-gray-800" type="button">
+                                            Action
                                             <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
                                             </svg>
                                         </button>
+
                                         <!-- Dropdown menu -->
-                                        <div id="dropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-                                            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
-                                                <li><a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><i class="fa-solid fa-eye me-2"></i>View</a></li>
-                                                <li><a href="#!" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"><i class="fa-solid fa-pen-to-square me-2"></i>Edit</a></li>
-                                                <hr class="w-[90%] mx-auto">
+                                        <div id="dropdown_{{ $transaction->id }}" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                                            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownButton_{{ $transaction->id }}">
                                                 <li>
-                                                    <form action="#!" method="POST" class="delete-form">
-                                                        <button type="submit" class="delete-button w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white flex items-center focus:outline-none">
-                                                            <i class="fa-solid fa-trash me-2 text-red-500"></i><span class="text-red-500">Delete</span>
-                                                        </button>
-                                                    </form>
+                                                    <a href="{{ route('transaction.edit', $transaction->id) }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                        <i class="fa-solid fa-pen-to-square me-2"></i>Edit
+                                                    </a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -120,14 +118,16 @@
                                     <td>
                                         <ul class="list-disc list-inside">
                                             @foreach($transaction->details as $detail)
-                                                <li>{{ $detail->particulars }}</li>
+                                                <li class="particulars" data-fulltext="{{ $detail->particulars }}">
+                                                    {{ Str::limit($detail->particulars, 40) }}
+                                                </li>
                                             @endforeach
                                         </ul>
                                     </td>
                                     <td>
                                         <ul class="list-disc list-inside">
                                             @foreach($transaction->details as $detail)
-                                                <li>{{ $detail->uacs_code }}</li>
+                                                <li>{{ substr($detail->uacs_code, 0, 1) . '-' . substr($detail->uacs_code, 1, 2) . '-' . substr($detail->uacs_code, 3, 2) . '-' . substr($detail->uacs_code, 5, 3) . '-' . substr($detail->uacs_code, 8, 2) }}</li>
                                             @endforeach
                                         </ul>
                                     </td>
@@ -141,13 +141,13 @@
                                     <td>
                                         <ul class="list-disc list-inside">
                                             @foreach($transaction->details as $detail)
-                                                <li>{{ number_format($detail->amount, 2) }}</li>
+                                                <li>{{ number_format($detail->amount, 2) }}</li> <!-- Format the amount with 2 decimal places -->
                                             @endforeach
                                         </ul>
                                     </td>
                                     <td>{{ $transaction->ref }}</td>
                                     <td>{{ $transaction->payee }}</td>
-                                    <td>{{ $transaction->description }}</td>
+                                    <td>{{ \Str::limit($transaction->description, 40, '...') }}</td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -160,6 +160,36 @@
         </div>
     </div>
 
+    <script>
+        $(document).ready(function() {
+            var table = $('#search-table').DataTable({
+                searchable: true,
+                sortable: false
+            });
+
+            // Custom search function
+            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                // Get the search term from the search input
+                var searchTerm = table.search().toLowerCase();
+
+                // Get the full text from data-fulltext attributes for "particulars" and "remarks"
+                var particulars = $('td .particulars', table.row(dataIndex).node()).data('fulltext').toLowerCase();
+                var remarks = $('td .remarks', table.row(dataIndex).node()).data('fulltext').toLowerCase();
+
+                // Check if the search term exists in either the fulltext attributes
+                if (particulars.indexOf(searchTerm) !== -1 || remarks.indexOf(searchTerm) !== -1) {
+                    return true; // Show the row
+                }
+
+                return false; // Otherwise, hide the row
+            });
+
+            // Trigger a redraw when the search is performed
+            $('#search-table_filter input').on('keyup', function() {
+                table.draw();
+            });
+        });
+    </script>
     <script>
         if (document.getElementById("search-table") && typeof simpleDatatables.DataTable !== 'undefined') {
             const dataTable = new simpleDatatables.DataTable("#search-table", {
