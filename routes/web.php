@@ -26,6 +26,9 @@ Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified',])
     Route::get('transaction_index', [TransactionController::class, 'index'])->name('transaction.index');
     Route::get('transaction_create', [TransactionController::class, 'create'])->name('transaction.create');
     Route::post('transaction_store', [TransactionController::class, 'store'])->name('transaction.store');
+    Route::get('transaction/{id}/edit', [TransactionController::class, 'edit'])->name('transaction.edit');
+    Route::put('transaction/{id}', [TransactionController::class, 'update'])->name('transaction.update'); // Route for updating the transaction
+
 
 });
 

@@ -5,8 +5,6 @@
         </h2>
     </x-slot>
 
-
-    <!-- Add this CSS for light mode and dark mode compatibility -->
     <style>
         /* Light mode (default) */
         .select2-container--default .select2-selection--single {
@@ -71,7 +69,6 @@
             color: white; /* Make the text inside the select field white in dark mode */
         }
     </style>
-
 
     <div class="py-12">
         <div class="mx-auto sm:px-6 lg:px-8">
@@ -164,12 +161,6 @@
                     </div>
 
                     <script>
-                        // Pass the accounts array from PHP to JavaScript
-                        const accounts = @json($accounts);
-                    </script>
-
-                    <!-- Updated Script -->
-                    <script>
                         document.addEventListener("DOMContentLoaded", function () {
                             const container = document.getElementById("transaction-fields-container");
                             const addRowButton = document.getElementById("addRowButton");
@@ -179,24 +170,20 @@
                             // Pass accounts from PHP to JavaScript
                             const accounts = @json($accounts);
 
-                            function formatNumberWithCommas(value) {
-                                value = value.replace(/[^\d.]/g, '');
-                                const parts = value.split('.');
-                                parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-                                return parts.join('.');
-                            }
-
+                            // Attach input event listener to handle amount input
                             function attachAmountInputEvent(input) {
                                 input.addEventListener('input', function () {
-                                    const rawValue = input.value.replace(/[^\d.]/g, '');
-                                    const formattedValue = formatNumberWithCommas(rawValue);
-                                    const cursorPosition = input.selectionStart;
-                                    const cursorAdjustment = formattedValue.length - rawValue.length;
-                                    input.value = formattedValue;
-                                    input.setSelectionRange(cursorPosition + cursorAdjustment, cursorPosition + cursorAdjustment);
+                                    let rawValue = input.value;
+
+                                    // Allow user to type only numbers, commas, and a period (no other characters)
+                                    rawValue = rawValue.replace(/[^0-9,\.]/g, '');
+
+                                    // Allow manual input of commas and periods, no automatic formatting
+                                    input.value = rawValue;
                                 });
                             }
 
+                            // Create a new transaction row
                             function createTransactionRow() {
                                 const row = document.createElement("div");
                                 row.classList.add("sm:col-span-3", "grid", "grid-cols-11", "gap-5", "items-end");
@@ -236,11 +223,11 @@
 
                                 container.appendChild(row);
 
-                                // Attach the formatting event listener to the new amount input
+                                // Attach the amount input event listener
                                 const amountInput = row.querySelector('.amount-input');
                                 attachAmountInputEvent(amountInput);
 
-                                // Attach event listener to the remove button
+                                // Attach event listener to remove row
                                 row.querySelector(".removeRowButton").addEventListener("click", function () {
                                     row.remove();
                                 });
@@ -271,13 +258,12 @@
                             form.addEventListener('submit', function () {
                                 const amountInputs = document.querySelectorAll('.amount-input');
                                 amountInputs.forEach(function (input) {
-                                    input.value = input.value.replace(/,/g, ''); // Remove commas before submission
+                                    // Remove commas before submitting, but keep the decimal point intact
+                                    input.value = input.value.replace(/,/g, '');
                                 });
                             });
                         });
                     </script>
-
-
                 </section>
 
             </div>
