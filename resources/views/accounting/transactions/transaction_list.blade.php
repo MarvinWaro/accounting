@@ -141,7 +141,7 @@
                                     <td>
                                         <ul class="list-disc list-inside">
                                             @foreach($transaction->details as $detail)
-                                                <li>{{ number_format($detail->amount, 0) }}</li>
+                                                <li>{{ number_format($detail->amount, 2) }}</li> <!-- Format the amount with 2 decimal places -->
                                             @endforeach
                                         </ul>
                                     </td>
