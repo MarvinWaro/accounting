@@ -3,17 +3,32 @@
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('UACS') }}
         </h2>
-
     </x-slot>
 
-
-
-
+    @if (session('success') && !session('deletion'))
+        <script>
+            $(document).ready(function () {
+                Swal.fire({
+                    toast: true,
+                    icon: 'success',
+                    title: '{{ session('success') }}',
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 50000,
+                    timerProgressBar: true,
+                    background: '#28a745',
+                    customClass: {
+                        popup: 'colored-toast',
+                        icon: 'swal2-icon-success', // Explicitly define the icon class if needed
+                    }
+                });
+            });
+        </script>
+    @endif
 
     <div class="py-12">
         <div class=" mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
-
                 <div class="mx-5 my-5">
                     <a href="{{ route('uacs_create') }}" type="button" class="my-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 me-3">
@@ -62,14 +77,59 @@
                                                     <hr class="w-[90%] mx-auto">
                                                     <li>
                                                         <!-- Delete Form -->
-                                                        <form action="{{ route('uacs_destroy', $account->id) }}" method="POST" class="delete-form" id="delete-form-{{$account->id}}">
+                                                        <form action="{{ route('uacs_destroy', $account->id) }}" method="POST" class="delete-form" id="delete-form-uacs-{{$account->id}}">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="button" class="delete-button w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white flex items-center focus:outline-none" onclick="confirmDelete({{ $account->id }})">
+                                                            <button id="destroy-btn-{{$account->id}}" type="button" class="delete-button w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white flex items-center focus:outline-none">
                                                                 <i class="fa-solid fa-trash me-2 text-red-500"></i><span class="text-red-500">Delete</span>
                                                             </button>
                                                         </form>
+                                                        <script>
+                                                            $('#destroy-btn-{{$account->id}}').on('click', function(e) {
+                                                                e.preventDefault(); // Prevent default form submission behavior
+
+                                                                Swal.fire({
+                                                                    title: "Are you sure?",
+                                                                    text: "You won't be able to revert this!",
+                                                                    icon: "warning",
+                                                                    showCancelButton: true,
+                                                                    confirmButtonColor: "#3085d6",
+                                                                    cancelButtonColor: "#d33",
+                                                                    confirmButtonText: "Yes, delete it!"
+                                                                }).then((result) => {
+                                                                    if (result.isConfirmed) {
+                                                                        $.ajax({
+                                                                            url: "{{ route('uacs_destroy', $account->id) }}", // Your delete route
+                                                                            type: 'POST', // Use POST to comply with Laravel's form submission rules
+                                                                            data: {
+                                                                                _method: 'DELETE', // Override method with DELETE
+                                                                                _token: '{{ csrf_token() }}', // Include the CSRF token
+                                                                            },
+                                                                            success: function(response) {
+                                                                                // Show the success confirmation after delete is successful
+                                                                                Swal.fire({
+                                                                                    title: "Deleted!",
+                                                                                    text: "Your account has been deleted.",
+                                                                                    icon: "success"
+                                                                                }).then(() => {
+                                                                                    // Optionally, reload the page or remove the deleted row from the table
+                                                                                    location.reload();
+                                                                                });
+                                                                            },
+                                                                            error: function(xhr) {
+                                                                                Swal.fire({
+                                                                                    title: "Error!",
+                                                                                    text: "There was a problem deleting the account.",
+                                                                                    icon: "error"
+                                                                                });
+                                                                            }
+                                                                        });
+                                                                    }
+                                                                });
+                                                            });
+                                                        </script>
                                                     </li>
+
                                                 </ul>
                                             </div>
                                         </td>
@@ -83,14 +143,11 @@
                             </tbody>
                         </table>
                     </div>
-
-
-
                 </div>
-
             </div>
         </div>
     </div>
+
 
 
     <script>
@@ -119,7 +176,6 @@
             });
         }
     </script>
-
     <script>
         function confirmDelete(accountId) {
             // Show a confirmation prompt

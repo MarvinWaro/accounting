@@ -29,6 +29,8 @@
         {{-- JS LINK SCRIPT TO PUCLIC --}}
         <script src="{{ asset('js/main.js') }}"></script>
         <script src="//unpkg.com/alpinejs" defer></script>
+        <!-- Include SweetAlert2 JS -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 @include('partials._footer')
 

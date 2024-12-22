@@ -27,8 +27,9 @@ class AccountController extends Controller
     // Store a newly created account
     public function store(Request $request)
     {
+        // Validate account number as unique only for active accounts
         $validated = $request->validate([
-            'account_no' => 'required|integer|unique:accounts', // Validate as an integer
+            'account_no' => 'required|integer|unique:accounts,account_no,NULL,id,exclude,0', // Check uniqueness where exclude is 0
             'description' => 'required',
         ]);
 
@@ -53,21 +54,18 @@ class AccountController extends Controller
         }
     }
 
-
     public function edit($id)
     {
         $account = Account::findOrFail($id);
         return view('accounting.uacs.uacs_edit', compact('account'));
     }
 
-
-
     // Update an existing account
     public function update(Request $request, $id)
     {
-        // Validate the input
+        // Validate account number as unique only for active accounts, excluding the current account
         $validated = $request->validate([
-            'account_no' => 'required|integer|unique:accounts,account_no,' . $id,
+            'account_no' => 'required|integer|unique:accounts,account_no,' . $id . ',id,exclude,0', // Check uniqueness where exclude is 0
             'description' => 'required',
         ]);
 
@@ -78,6 +76,7 @@ class AccountController extends Controller
         return redirect()->route('uacs_index')->with('success', 'Account updated successfully.');
     }
 
+
     public function destroy($id)
     {
         $account = Account::findOrFail($id);
@@ -87,7 +86,7 @@ class AccountController extends Controller
             'activate' => 0, // Deactivate the account
         ]);
 
-        return redirect()->route('uacs_index')->with('success', 'Account deactivated successfully.');
+        return redirect()->route('uacs_index')->with('success', 'Account removed successfully.')->with('deletion', true);
     }
 
 

@@ -157,5 +157,33 @@ class TransactionController extends Controller
         }
     }
 
+    public function destroy($id)
+    {
+        // Find the transaction by ID
+        $transaction = Transaction::findOrFail($id);
+
+        // Delete the transaction
+        $transaction->delete();
+
+        // Redirect back with a success message
+        return redirect()->route('transaction.index')->with('success', 'Transaction deleted successfully.');
+    }
+
+    public function show($id)
+    {
+        $transaction = Transaction::with('details')->findOrFail($id);
+
+        // Calculate the total amount of all transaction details
+        $totalAmount = $transaction->details->sum('amount');
+
+        return view('accounting.transactions.view_transaction', [
+            'transaction' => $transaction,
+            'totalAmount' => $totalAmount,
+        ]);
+    }
+
+
+
+
 
 }
