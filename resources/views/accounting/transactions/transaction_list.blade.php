@@ -24,6 +24,20 @@
 
     </style>
 
+    @if (session('success') && !session('deletion'))
+    <script>
+        $(document).ready(function () {
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: '{{ session('success') }}',
+                showConfirmButton: true, // Show the OK button
+                confirmButtonText: "OK" // Customize the button text
+            });
+        });
+    </script>
+    @endif
+
     <div class="py-12">
         <div class=" mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
@@ -106,13 +120,47 @@
                                         <div id="dropdown_{{ $transaction->id }}" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
                                             <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownButton_{{ $transaction->id }}">
                                                 <li>
+                                                    <a href="{{ route('transaction.show', $transaction->id) }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                        <i class="fa-solid fa-eye me-2"></i>View
+                                                    </a>
+                                                </li>
+                                                <li>
                                                     <a href="{{ route('transaction.edit', $transaction->id) }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                                         <i class="fa-solid fa-pen-to-square me-2"></i>Edit
                                                     </a>
                                                 </li>
+                                                <li>
+                                                    <form action="{{ route('transaction.destroy', $transaction->id) }}" id="delete-form-transaction-{{$transaction->id}}" method="POST" style="display: inline;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button" id="destroy-btn-transaction-{{$transaction->id}}" class="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                            <i class="fa-solid fa-trash me-2"></i>Delete
+                                                        </button>
+                                                    </form>
+                                                </li>
+                                                <script>
+                                                    $('#destroy-btn-transaction-{{$transaction->id}}').on('click', function(e){
+                                                        e.preventDefault(); // Prevent the default form submission behavior
+                                                        Swal.fire({
+                                                            title: "Are you sure?",
+                                                            text: "You won't be able to revert this!",
+                                                            icon: "warning",
+                                                            showCancelButton: true,
+                                                            confirmButtonColor: "#3085d6",
+                                                            cancelButtonColor: "#d33",
+                                                            confirmButtonText: "Yes, delete it!"
+                                                        }).then((result) => {
+                                                            if (result.isConfirmed) {
+                                                                // Submit the form if confirmed
+                                                                $('#delete-form-transaction-{{$transaction->id}}').submit();
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
                                             </ul>
                                         </div>
                                     </td>
+
                                     <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $transaction->transaction_date }}</td>
                                     <td>{{ $transaction->jev_no }}</td>
                                     <td>
@@ -151,7 +199,6 @@
                                 </tr>
                                 @endforeach
                             </tbody>
-
                         </table>
                     </div>
 
@@ -190,6 +237,7 @@
             });
         });
     </script>
+    
     <script>
         if (document.getElementById("search-table") && typeof simpleDatatables.DataTable !== 'undefined') {
             const dataTable = new simpleDatatables.DataTable("#search-table", {

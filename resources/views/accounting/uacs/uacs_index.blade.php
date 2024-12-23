@@ -3,17 +3,26 @@
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('UACS') }}
         </h2>
-
     </x-slot>
 
-
-
+    @if (session('success'))
+        <script>
+            $(document).ready(function () {
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: '{{ session('success') }}',
+                    showConfirmButton: true, // Show the OK button
+                    confirmButtonText: "OK" // Customize the button text
+                });
+            });
+        </script>
+    @endif
 
 
     <div class="py-12">
         <div class=" mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
-
                 <div class="mx-5 my-5">
                     <a href="{{ route('uacs_create') }}" type="button" class="my-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 me-3">
@@ -21,15 +30,14 @@
                         </svg>
                         Add new account
                     </a>
-
                     <div class="table-wrapper">
                         <table id="search-table">
                             <thead>
                                 <tr>
-                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">Action</th>
-                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">ID</th>
-                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">Account No.</th>
-                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">Account Description</th>
+                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-4 py-2">Action</th>
+                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-4 py-2">ID</th>
+                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-4 py-2">Account No.</th>
+                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-4 py-2">Account Description</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -62,13 +70,34 @@
                                                     <hr class="w-[90%] mx-auto">
                                                     <li>
                                                         <!-- Delete Form -->
-                                                        <form action="{{ route('uacs_destroy', $account->id) }}" method="POST" class="delete-form" id="delete-form-{{$account->id}}">
+                                                        <form action="{{ route('uacs_destroy', $account->id) }}" method="POST" class="delete-form" id="delete-form-uacs-{{$account->id}}">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button type="button" class="delete-button w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white flex items-center focus:outline-none" onclick="confirmDelete({{ $account->id }})">
+                                                            <button id="destroy-btn-{{$account->id}}" type="button" class="delete-button w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white flex items-center focus:outline-none">
                                                                 <i class="fa-solid fa-trash me-2 text-red-500"></i><span class="text-red-500">Delete</span>
                                                             </button>
                                                         </form>
+
+                                                        <script>
+                                                            // Use a unique ID for the button click handler
+                                                            $('#destroy-btn-{{$account->id}}').on('click', function(e){
+                                                                e.preventDefault(); // Prevent the default form submission behavior
+                                                                Swal.fire({
+                                                                    title: "Are you sure?",
+                                                                    text: "You won't be able to revert this!",
+                                                                    icon: "warning",
+                                                                    showCancelButton: true,
+                                                                    confirmButtonColor: "#3085d6",
+                                                                    cancelButtonColor: "#d33",
+                                                                    confirmButtonText: "Yes, delete it!"
+                                                                }).then((result) => {
+                                                                    if (result.isConfirmed) {
+                                                                        // Submit the correct form if confirmed
+                                                                        $('#delete-form-uacs-{{$account->id}}').submit();  // Correct form ID
+                                                                    }
+                                                                });
+                                                            });
+                                                        </script>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -83,15 +112,10 @@
                             </tbody>
                         </table>
                     </div>
-
-
-
                 </div>
-
             </div>
         </div>
     </div>
-
 
     <script>
         if (document.getElementById("search-table") && typeof simpleDatatables.DataTable !== 'undefined') {
@@ -119,7 +143,6 @@
             });
         }
     </script>
-
     <script>
         function confirmDelete(accountId) {
             // Show a confirmation prompt

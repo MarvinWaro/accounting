@@ -71,22 +71,29 @@
     </style>
 
     <div class="py-12">
-        <div class="mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
 
                 @if ($errors->any())
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
-                        <strong>Whoops!</strong> There were some problems with your input.<br><br>
-                        <ul>
+                    <script>
+                        $(document).ready(function() {
+                            let errorMessages = '';
                             @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
+                                errorMessages += '<li>{{ $error }}</li>';
                             @endforeach
-                        </ul>
-                    </div>
+
+                            Swal.fire({
+                                title: 'Whoops! There were some problems with your input.',
+                                html: '<ul style="text-align: center;">' + errorMessages + '</ul>',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                            });
+                        });
+                    </script>
                 @endif
 
                 <section>
-                    <div class="max-w-7xl mx-auto py-8 px-4 lg:py-16">
+                    <div class="mx-auto py-8 px-10 lg:py-16">
                         <h2 class="mb-8 text-xl font-bold text-gray-900 dark:text-white">Add New Entry</h2>
                         <form action="{{ route('transaction.store') }}" method="POST">
                             @csrf

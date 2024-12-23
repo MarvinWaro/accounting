@@ -6,11 +6,11 @@
     </x-slot>
 
     <div class="py-12">
-        <div class=" mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
 
                 <section>
-                    <div class="max-w-7xl mx-auto py-8 px-4 lg:py-16">
+                    <div class=" mx-auto py-8 px-10 lg:py-16">
                         <h2 class="mb-8 text-xl font-bold text-gray-900 dark:text-white">Add new account</h2>
 
                         @if ($errors->any())
@@ -42,7 +42,7 @@
                             <!-- Save Account Button -->
                             <div class="flex-none basis-1/5">
                                 <button type="submit" class="mt-7 w-full inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-center text-white bg-primary-700 rounded-lg hover:bg-primary-800 focus:ring-2 focus:ring-primary-200 dark:focus:ring-primary-900">
-                                    Save Account
+                                    Update Account
                                 </button>
                             </div>
                         </form>

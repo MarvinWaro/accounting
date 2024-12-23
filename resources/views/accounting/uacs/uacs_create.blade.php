@@ -6,11 +6,11 @@
     </x-slot>
 
     <div class="py-12">
-        <div class=" mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
 
                 <section>
-                    <div class="max-w-7xl mx-auto py-8 px-4 lg:py-16">
+                    <div class="mx-auto py-8 px-10 lg:py-16">
                         <h2 class="mb-8 text-xl font-bold text-gray-900 dark:text-white">Add new account</h2>
 
                         @if ($errors->any())

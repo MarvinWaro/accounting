@@ -25,22 +25,21 @@ class TransactionController extends Controller
 
     public function store(Request $request)
     {
+        // Remove commas and clean 'amount' values before validation
         if ($request->has('details')) {
             $details = $request->input('details');
-
             foreach ($details as &$detail) {
                 if (isset($detail['amount'])) {
                     // Remove commas from the 'amount' field
                     $detail['amount'] = preg_replace('/,/', '', $detail['amount']);
-                    // Convert amount to a float (or decimal) and ensure two decimal places
+                    // Convert amount to a float (or decimal)
                     $detail['amount'] = (float) $detail['amount'];
                 }
             }
-
-            // Re-assign the cleaned 'details' array back to the request
-            $request->merge(['details' => $details]);
+            $request->merge(['details' => $details]); // Merge cleaned data back into the request
         }
 
+        // Define custom validation rules
         $validated = $request->validate([
             'transaction_date' => 'required|date',
             'jev' => 'required|string|max:255|unique:transactions,jev_no',
@@ -52,6 +51,17 @@ class TransactionController extends Controller
             'details.*.uacs_code' => 'required|string|max:255',
             'details.*.mode_of_payment' => 'required|string|in:Credit,Debit',
             'details.*.amount' => 'required|numeric|min:0|max:100000000000',
+        ], [], [
+            'transaction_date' => 'Transaction Date',
+            'jev' => 'JEV Number',
+            'description' => 'Description',
+            'ref' => 'Reference',
+            'payee' => 'Payee',
+            'details' => 'Transaction Details',
+            'details.*.particulars' => 'Particulars',
+            'details.*.uacs_code' => 'UACS Code',
+            'details.*.mode_of_payment' => 'Mode of Payment',
+            'details.*.amount' => 'Amount',
         ]);
 
         try {
@@ -70,7 +80,7 @@ class TransactionController extends Controller
                     'particulars' => $detail['particulars'],
                     'uacs_code' => $detail['uacs_code'],
                     'mode_of_payment' => $detail['mode_of_payment'],
-                    'amount' => $detail['amount'], // This will now be a decimal value
+                    'amount' => $detail['amount'],
                 ]);
             }
 
@@ -82,6 +92,7 @@ class TransactionController extends Controller
             return redirect()->back()->withErrors(['An error occurred: ' . $e->getMessage()]);
         }
     }
+
 
     public function edit($id)
     {
@@ -108,6 +119,7 @@ class TransactionController extends Controller
             $request->merge(['details' => $details]); // Merge cleaned data back into the request
         }
 
+        // Define custom validation rules and custom attribute names
         $validated = $request->validate([
             'transaction_date' => 'required|date',
             'jev' => 'required|string|max:255|unique:transactions,jev_no,' . $id,
@@ -119,6 +131,17 @@ class TransactionController extends Controller
             'details.*.uacs_code' => 'required|string|max:255',
             'details.*.mode_of_payment' => 'required|string|in:Credit,Debit',
             'details.*.amount' => 'required|numeric|min:0|max:100000000000',
+        ], [], [
+            'transaction_date' => 'Transaction Date',
+            'jev' => 'JEV Number',
+            'description' => 'Description',
+            'ref' => 'Reference',
+            'payee' => 'Payee',
+            'details' => 'Transaction Details',
+            'details.*.particulars' => 'Particulars',
+            'details.*.uacs_code' => 'UACS Code',
+            'details.*.mode_of_payment' => 'Mode of Payment',
+            'details.*.amount' => 'Amount',
         ]);
 
         try {
@@ -156,6 +179,35 @@ class TransactionController extends Controller
             return redirect()->back()->withErrors(['An error occurred while updating the transaction: ' . $e->getMessage()]);
         }
     }
+
+
+    public function destroy($id)
+    {
+        // Find the transaction by ID
+        $transaction = Transaction::findOrFail($id);
+
+        // Delete the transaction
+        $transaction->delete();
+
+        // Redirect back with a success message
+        return redirect()->route('transaction.index')->with('success', 'Transaction deleted successfully.');
+    }
+
+    public function show($id)
+    {
+        $transaction = Transaction::with('details')->findOrFail($id);
+
+        // Calculate the total amount of all transaction details
+        $totalAmount = $transaction->details->sum('amount');
+
+        return view('accounting.transactions.view_transaction', [
+            'transaction' => $transaction,
+            'totalAmount' => $totalAmount,
+        ]);
+    }
+
+
+
 
 
 }

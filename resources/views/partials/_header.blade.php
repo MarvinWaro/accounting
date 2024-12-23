@@ -14,6 +14,11 @@
         <!-- Add this to your HTML head for CDN -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+        {{-- ROOT CSS --}}
+        <!-- Custom SweetAlert2 Styles -->
+        <link href="{{ asset('css/main.css') }}" rel="stylesheet">
+
+
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -31,13 +36,13 @@
         <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
         <!-- Include jQuery -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
         <!-- Select2 CSS -->
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         <!-- Select2 JS -->
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-
+        <!-- Include SweetAlert2 CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     </head>
 
 <body class="font-sans antialiased">

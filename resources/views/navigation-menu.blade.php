@@ -34,7 +34,7 @@
                     <x-nav-link href="{{ route('accounting_dashboard') }}" :active="request()->routeIs('accounting_dashboard')">
                         {{ __('Accounting Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link href="{{ route('transaction.index') }}" :active="request()->routeIs('transaction.index') || request()->routeIs('transaction.create')">
+                    <x-nav-link href="{{ route('transaction.index') }}" :active="request()->routeIs('transaction.index') || request()->routeIs('transaction.create') || request()->routeIs('transaction.edit') || request()->routeIs('transaction.show')">
                         {{ __('Transactions') }}
                     </x-nav-link>
                     <x-nav-link href="{{ route('uacs_index') }}" :active="request()->routeIs('uacs_index') || request()->routeIs('uacs_create') || request()->routeIs('uacs_edit')">
