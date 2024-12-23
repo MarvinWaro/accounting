@@ -75,14 +75,21 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
 
                 @if ($errors->any())
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
-                        <strong>Whoops!</strong> There were some problems with your input.<br><br>
-                        <ul>
+                    <script>
+                        $(document).ready(function() {
+                            let errorMessages = '';
                             @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
+                                errorMessages += '<li>{{ $error }}</li>';
                             @endforeach
-                        </ul>
-                    </div>
+
+                            Swal.fire({
+                                title: 'Whoops! There were some problems with your input.',
+                                html: '<ul style="text-align: center;">' + errorMessages + '</ul>',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                            });
+                        });
+                    </script>
                 @endif
 
                 <section>

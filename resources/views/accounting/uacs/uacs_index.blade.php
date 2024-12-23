@@ -5,26 +5,20 @@
         </h2>
     </x-slot>
 
-    @if (session('success') && !session('deletion'))
+    @if (session('success'))
         <script>
             $(document).ready(function () {
                 Swal.fire({
-                    toast: true,
-                    icon: 'success',
+                    position: "center",
+                    icon: "success",
                     title: '{{ session('success') }}',
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 50000,
-                    timerProgressBar: true,
-                    background: '#28a745',
-                    customClass: {
-                        popup: 'colored-toast',
-                        icon: 'swal2-icon-success', // Explicitly define the icon class if needed
-                    }
+                    showConfirmButton: true, // Show the OK button
+                    confirmButtonText: "OK" // Customize the button text
                 });
             });
         </script>
     @endif
+
 
     <div class="py-12">
         <div class=" mx-auto sm:px-6 lg:px-8">
@@ -36,15 +30,14 @@
                         </svg>
                         Add new account
                     </a>
-
                     <div class="table-wrapper">
                         <table id="search-table">
                             <thead>
                                 <tr>
-                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">Action</th>
-                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">ID</th>
-                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">Account No.</th>
-                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">Account Description</th>
+                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-4 py-2">Action</th>
+                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-4 py-2">ID</th>
+                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-4 py-2">Account No.</th>
+                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-4 py-2">Account Description</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -84,10 +77,11 @@
                                                                 <i class="fa-solid fa-trash me-2 text-red-500"></i><span class="text-red-500">Delete</span>
                                                             </button>
                                                         </form>
-                                                        <script>
-                                                            $('#destroy-btn-{{$account->id}}').on('click', function(e) {
-                                                                e.preventDefault(); // Prevent default form submission behavior
 
+                                                        <script>
+                                                            // Use a unique ID for the button click handler
+                                                            $('#destroy-btn-{{$account->id}}').on('click', function(e){
+                                                                e.preventDefault(); // Prevent the default form submission behavior
                                                                 Swal.fire({
                                                                     title: "Are you sure?",
                                                                     text: "You won't be able to revert this!",
@@ -98,38 +92,13 @@
                                                                     confirmButtonText: "Yes, delete it!"
                                                                 }).then((result) => {
                                                                     if (result.isConfirmed) {
-                                                                        $.ajax({
-                                                                            url: "{{ route('uacs_destroy', $account->id) }}", // Your delete route
-                                                                            type: 'POST', // Use POST to comply with Laravel's form submission rules
-                                                                            data: {
-                                                                                _method: 'DELETE', // Override method with DELETE
-                                                                                _token: '{{ csrf_token() }}', // Include the CSRF token
-                                                                            },
-                                                                            success: function(response) {
-                                                                                // Show the success confirmation after delete is successful
-                                                                                Swal.fire({
-                                                                                    title: "Deleted!",
-                                                                                    text: "Your account has been deleted.",
-                                                                                    icon: "success"
-                                                                                }).then(() => {
-                                                                                    // Optionally, reload the page or remove the deleted row from the table
-                                                                                    location.reload();
-                                                                                });
-                                                                            },
-                                                                            error: function(xhr) {
-                                                                                Swal.fire({
-                                                                                    title: "Error!",
-                                                                                    text: "There was a problem deleting the account.",
-                                                                                    icon: "error"
-                                                                                });
-                                                                            }
-                                                                        });
+                                                                        // Submit the correct form if confirmed
+                                                                        $('#delete-form-uacs-{{$account->id}}').submit();  // Correct form ID
                                                                     }
                                                                 });
                                                             });
                                                         </script>
                                                     </li>
-
                                                 </ul>
                                             </div>
                                         </td>
@@ -147,8 +116,6 @@
             </div>
         </div>
     </div>
-
-
 
     <script>
         if (document.getElementById("search-table") && typeof simpleDatatables.DataTable !== 'undefined') {

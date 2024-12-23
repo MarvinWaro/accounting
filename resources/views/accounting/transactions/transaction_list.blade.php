@@ -24,6 +24,20 @@
 
     </style>
 
+    @if (session('success') && !session('deletion'))
+    <script>
+        $(document).ready(function () {
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: '{{ session('success') }}',
+                showConfirmButton: true, // Show the OK button
+                confirmButtonText: "OK" // Customize the button text
+            });
+        });
+    </script>
+    @endif
+
     <div class="py-12">
         <div class=" mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
@@ -223,6 +237,7 @@
             });
         });
     </script>
+    
     <script>
         if (document.getElementById("search-table") && typeof simpleDatatables.DataTable !== 'undefined') {
             const dataTable = new simpleDatatables.DataTable("#search-table", {
