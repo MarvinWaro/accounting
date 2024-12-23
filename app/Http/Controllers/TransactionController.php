@@ -12,7 +12,11 @@ class TransactionController extends Controller
 {
     public function index()
     {
-        $transactions = Transaction::all();
+        // Fetch active transactions that are not excluded, ordered by ID descending (newest at the bottom)
+        $transactions = Transaction::where('exclude', 0)
+            ->orderBy('id', 'DESC') // Order by id, to avoid confusion with reused IDs
+            ->get();
+
         return view('accounting.transactions.transaction_list', compact('transactions'));
     }
 
@@ -39,10 +43,10 @@ class TransactionController extends Controller
             $request->merge(['details' => $details]); // Merge cleaned data back into the request
         }
 
-        // Define custom validation rules
+        // Define custom validation rules, excluding transactions that are marked as 'exclude'
         $validated = $request->validate([
             'transaction_date' => 'required|date',
-            'jev' => 'required|string|max:255|unique:transactions,jev_no',
+            'jev' => 'required|string|max:255|unique:transactions,jev_no,NULL,id,exclude,0', // Ensure uniqueness only for active transactions
             'description' => 'nullable|string',
             'ref' => 'nullable|string|max:255',
             'payee' => 'required|string|max:255',
@@ -51,48 +55,71 @@ class TransactionController extends Controller
             'details.*.uacs_code' => 'required|string|max:255',
             'details.*.mode_of_payment' => 'required|string|in:Credit,Debit',
             'details.*.amount' => 'required|numeric|min:0|max:100000000000',
-        ], [], [
-            'transaction_date' => 'Transaction Date',
-            'jev' => 'JEV Number',
-            'description' => 'Description',
-            'ref' => 'Reference',
-            'payee' => 'Payee',
-            'details' => 'Transaction Details',
-            'details.*.particulars' => 'Particulars',
-            'details.*.uacs_code' => 'UACS Code',
-            'details.*.mode_of_payment' => 'Mode of Payment',
-            'details.*.amount' => 'Amount',
         ]);
 
         try {
             DB::beginTransaction();
 
-            $transaction = Transaction::create([
-                'transaction_date' => $validated['transaction_date'],
-                'jev_no' => $validated['jev'],
-                'description' => $validated['description'],
-                'ref' => $validated['ref'],
-                'payee' => $validated['payee'],
-            ]);
+            // Check if there is an excluded transaction to reuse
+            $excludedTransaction = Transaction::where('exclude', 1)->first();
 
-            foreach ($validated['details'] as $detail) {
-                $transaction->details()->create([
-                    'particulars' => $detail['particulars'],
-                    'uacs_code' => $detail['uacs_code'],
-                    'mode_of_payment' => $detail['mode_of_payment'],
-                    'amount' => $detail['amount'],
+            if ($excludedTransaction) {
+                // Reuse the excluded transaction
+                $excludedTransaction->update([
+                    'transaction_date' => $validated['transaction_date'],
+                    'jev_no' => $validated['jev'], // Reuse the JEV number
+                    'description' => $validated['description'],
+                    'ref' => $validated['ref'],
+                    'payee' => $validated['payee'],
+                    'exclude' => 0, // Reactivate the transaction
+                    'activate' => 1, // Set to active
                 ]);
+
+                // Remove all existing transaction details
+                $excludedTransaction->details()->delete();
+
+                // Insert the new details
+                foreach ($validated['details'] as $detail) {
+                    $excludedTransaction->details()->create([
+                        'particulars' => $detail['particulars'],
+                        'uacs_code' => $detail['uacs_code'],
+                        'mode_of_payment' => $detail['mode_of_payment'],
+                        'amount' => $detail['amount'], // Store the cleaned numeric value
+                    ]);
+                }
+
+                DB::commit();
+                return redirect()->route('transaction.index')->with('success', 'Excluded transaction reused successfully!');
+            } else {
+                // Create a new transaction if no excluded transaction exists
+                $transaction = Transaction::create([
+                    'transaction_date' => $validated['transaction_date'],
+                    'jev_no' => $validated['jev'], // New JEV number
+                    'description' => $validated['description'],
+                    'ref' => $validated['ref'],
+                    'payee' => $validated['payee'],
+                    'activate' => 1, // Set as active
+                    'exclude' => 0,  // Not excluded
+                ]);
+
+                // Insert the new details
+                foreach ($validated['details'] as $detail) {
+                    $transaction->details()->create([
+                        'particulars' => $detail['particulars'],
+                        'uacs_code' => $detail['uacs_code'],
+                        'mode_of_payment' => $detail['mode_of_payment'],
+                        'amount' => $detail['amount'], // Store the cleaned numeric value
+                    ]);
+                }
+
+                DB::commit();
+                return redirect()->route('transaction.index')->with('success', 'Transaction created successfully!');
             }
-
-            DB::commit();
-
-            return redirect()->route('transaction.index')->with('success', 'Transaction created successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withErrors(['An error occurred: ' . $e->getMessage()]);
         }
     }
-
 
     public function edit($id)
     {
@@ -119,10 +146,23 @@ class TransactionController extends Controller
             $request->merge(['details' => $details]); // Merge cleaned data back into the request
         }
 
+        // Fetch the transaction, including excluded ones
+        $transaction = Transaction::withTrashed()->findOrFail($id);
+
         // Define custom validation rules and custom attribute names
         $validated = $request->validate([
             'transaction_date' => 'required|date',
-            'jev' => 'required|string|max:255|unique:transactions,jev_no,' . $id,
+            'jev' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('transactions', 'jev_no')
+                    ->ignore($transaction->id)
+                    ->where(function ($query) use ($transaction) {
+                        // Ensure that the JEV number is unique across active transactions only
+                        return $query->where('exclude', 0);
+                    }),
+            ],
             'description' => 'nullable|string',
             'ref' => 'nullable|string|max:255',
             'payee' => 'required|string|max:255',
@@ -131,6 +171,8 @@ class TransactionController extends Controller
             'details.*.uacs_code' => 'required|string|max:255',
             'details.*.mode_of_payment' => 'required|string|in:Credit,Debit',
             'details.*.amount' => 'required|numeric|min:0|max:100000000000',
+            'activate' => 'nullable|boolean',
+            'exclude' => 'nullable|boolean',
         ], [], [
             'transaction_date' => 'Transaction Date',
             'jev' => 'JEV Number',
@@ -142,19 +184,22 @@ class TransactionController extends Controller
             'details.*.uacs_code' => 'UACS Code',
             'details.*.mode_of_payment' => 'Mode of Payment',
             'details.*.amount' => 'Amount',
+            'activate' => 'Activate Status',
+            'exclude' => 'Exclude Status',
         ]);
 
         try {
             DB::beginTransaction();
 
-            // Update the transaction main data
-            $transaction = Transaction::findOrFail($id);
+            // Update the transaction main data, including 'activate' and 'exclude'
             $transaction->update([
                 'transaction_date' => $validated['transaction_date'],
                 'jev_no' => $validated['jev'],
                 'description' => $validated['description'],
                 'ref' => $validated['ref'],
                 'payee' => $validated['payee'],
+                'activate' => isset($validated['activate']) ? $validated['activate'] : 0,
+                'exclude' => isset($validated['exclude']) ? $validated['exclude'] : 0,
             ]);
 
             // Remove all existing details first
@@ -162,12 +207,11 @@ class TransactionController extends Controller
 
             // Insert new details after removing commas from amount
             foreach ($validated['details'] as $detail) {
-                // Ensure the amount is already cleaned and converted to a float
                 $transaction->details()->create([
                     'particulars' => $detail['particulars'],
                     'uacs_code' => $detail['uacs_code'],
                     'mode_of_payment' => $detail['mode_of_payment'],
-                    'amount' => $detail['amount'],  // Store the cleaned numeric value
+                    'amount' => $detail['amount'],
                 ]);
             }
 
@@ -180,17 +224,18 @@ class TransactionController extends Controller
         }
     }
 
-
     public function destroy($id)
     {
         // Find the transaction by ID
         $transaction = Transaction::findOrFail($id);
 
-        // Delete the transaction
-        $transaction->delete();
+        // Mark as excluded and deactivate the transaction
+        $transaction->update([
+            'exclude' => 1,  // Mark as excluded
+            'activate' => 0, // Deactivate the transaction
+        ]);
 
-        // Redirect back with a success message
-        return redirect()->route('transaction.index')->with('success', 'Transaction deleted successfully.');
+        return redirect()->route('transaction.index')->with('success', 'Transaction excluded successfully.');
     }
 
     public function show($id)

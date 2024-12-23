@@ -11,7 +11,7 @@
 
                 <!-- Transaction Info -->
                 <div class="space-y-4">
-                    <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-200">Transaction Information</h3>
+                    <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-200"><span class="me-3">#{{ $transaction->id }}</span>Transaction Information</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Date</p>
