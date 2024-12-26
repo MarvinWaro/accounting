@@ -228,10 +228,9 @@ class TransactionController extends Controller
         }
     }
 
-
     public function destroy($id)
     {
-        // Find the transaction by ID
+        \Log::info('Destroying transaction with ID: ' . $id);
         $transaction = Transaction::findOrFail($id);
 
         // Mark as excluded and deactivate the transaction
@@ -242,6 +241,7 @@ class TransactionController extends Controller
 
         return redirect()->route('transaction.index')->with('success', 'Transaction excluded successfully.');
     }
+
 
     public function show($id)
     {
@@ -256,10 +256,5 @@ class TransactionController extends Controller
             'totalAmount' => $totalAmount,
         ]);
     }
-
-
-
-
-
 
 }
