@@ -90,17 +90,7 @@
                                     </th>
                                     <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">
                                         <span class="flex items-center">
-                                            Ref
-                                        </span>
-                                    </th>
-                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">
-                                        <span class="flex items-center">
                                             Payee
-                                        </span>
-                                    </th>
-                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">
-                                        <span class="flex items-center">
-                                            Description
                                         </span>
                                     </th>
                                 </tr>
@@ -193,9 +183,8 @@
                                             @endforeach
                                         </ul>
                                     </td>
-                                    <td>{{ $transaction->ref }}</td>
                                     <td>{{ $transaction->payee }}</td>
-                                    <td>{{ \Str::limit($transaction->description, 40, '...') }}</td>
+                                    {{-- <td>{{ \Str::limit($transaction->description, 40, '...') }}</td> --}}
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -237,7 +226,7 @@
             });
         });
     </script>
-    
+
     <script>
         if (document.getElementById("search-table") && typeof simpleDatatables.DataTable !== 'undefined') {
             const dataTable = new simpleDatatables.DataTable("#search-table", {
