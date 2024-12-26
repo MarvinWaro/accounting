@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;  // Add this line
 
 class Transaction extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;  // Add SoftDeletes to the model
 
     protected $fillable = [
         'transaction_date',
@@ -15,8 +16,8 @@ class Transaction extends Model
         'description',
         'ref',
         'payee',
-        'activate', // Add activate to the fillable array
-        'exclude',  // Add exclude to the fillable array
+        'activate',
+        'exclude',
     ];
 
     public function details()

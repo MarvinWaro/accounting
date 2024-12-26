@@ -7,6 +7,8 @@ use App\Models\Transaction;
 use App\Models\Account;
 use App\Models\TransactionDetail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule; // Add this line
+
 
 class TransactionController extends Controller
 {
@@ -123,12 +125,14 @@ class TransactionController extends Controller
 
     public function edit($id)
     {
-        $transaction = Transaction::findOrFail($id);
+        // Include trashed transactions
+        $transaction = Transaction::withTrashed()->findOrFail($id);
         $accounts = Account::all(); // Assuming you're fetching the accounts from the database
 
         // Pass transaction details to the view
         return view('accounting.transactions.edit_transaction', compact('transaction', 'accounts'));
     }
+
 
     public function update(Request $request, $id)
     {
@@ -224,6 +228,7 @@ class TransactionController extends Controller
         }
     }
 
+
     public function destroy($id)
     {
         // Find the transaction by ID
@@ -240,7 +245,8 @@ class TransactionController extends Controller
 
     public function show($id)
     {
-        $transaction = Transaction::with('details')->findOrFail($id);
+        // Include trashed transactions
+        $transaction = Transaction::withTrashed()->with('details')->findOrFail($id);
 
         // Calculate the total amount of all transaction details
         $totalAmount = $transaction->details->sum('amount');
@@ -250,6 +256,7 @@ class TransactionController extends Controller
             'totalAmount' => $totalAmount,
         ]);
     }
+
 
 
 
