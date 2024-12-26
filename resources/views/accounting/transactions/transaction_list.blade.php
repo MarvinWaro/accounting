@@ -184,7 +184,6 @@
                                         </ul>
                                     </td>
                                     <td>{{ $transaction->payee }}</td>
-                                    {{-- <td>{{ \Str::limit($transaction->description, 40, '...') }}</td> --}}
                                 </tr>
                                 @endforeach
                             </tbody>
