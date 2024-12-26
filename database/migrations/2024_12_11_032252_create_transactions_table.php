@@ -14,6 +14,8 @@ return new class extends Migration {
             $table->text('description')->nullable();
             $table->string('ref')->nullable();
             $table->string('payee');
+            $table->boolean('activate')->default(1); // Whether the transaction is active
+            $table->boolean('exclude')->default(0); // Whether the transaction is excluded
             $table->timestamps();
         });
 

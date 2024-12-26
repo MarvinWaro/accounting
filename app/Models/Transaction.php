@@ -15,6 +15,8 @@ class Transaction extends Model
         'description',
         'ref',
         'payee',
+        'activate', // Add activate to the fillable array
+        'exclude',  // Add exclude to the fillable array
     ];
 
     public function details()
@@ -22,4 +24,5 @@ class Transaction extends Model
         return $this->hasMany(TransactionDetail::class);
     }
 }
+
 
