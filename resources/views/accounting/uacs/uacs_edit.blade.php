@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Create New Account') }}
+            {{ __('Update New Account') }}
         </h2>
     </x-slot>
 
@@ -11,7 +11,7 @@
 
                 <section>
                     <div class=" mx-auto py-8 px-10 lg:py-16">
-                        <h2 class="mb-8 text-xl font-bold text-gray-900 dark:text-white">Add new account</h2>
+                        <h2 class="mb-8 text-xl font-bold text-gray-900 dark:text-white">Update new account</h2>
 
                         @if ($errors->any())
                             <div class="text-red-500">
