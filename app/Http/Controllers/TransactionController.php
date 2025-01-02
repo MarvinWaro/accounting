@@ -133,7 +133,6 @@ class TransactionController extends Controller
         return view('accounting.transactions.edit_transaction', compact('transaction', 'accounts'));
     }
 
-
     public function update(Request $request, $id)
     {
         // Remove commas and clean 'amount' values before validation
@@ -241,7 +240,6 @@ class TransactionController extends Controller
 
         return redirect()->route('transaction.index')->with('success', 'Transaction excluded successfully.');
     }
-
 
     public function show($id)
     {
