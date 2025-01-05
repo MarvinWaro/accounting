@@ -245,13 +245,17 @@ class TransactionController extends Controller
     {
         // Include trashed transactions
         $transaction = Transaction::withTrashed()->with('details')->findOrFail($id);
-
-        // Calculate the total amount of all transaction details
+        // Calculate the grand total of all transaction details
         $totalAmount = $transaction->details->sum('amount');
-
+        // Calculate the total amount for Credit
+        $totalCredit = $transaction->details->where('mode_of_payment', 'Credit')->sum('amount');
+        // Calculate the total amount for Debit
+        $totalDebit = $transaction->details->where('mode_of_payment', 'Debit')->sum('amount');
         return view('accounting.transactions.view_transaction', [
             'transaction' => $transaction,
             'totalAmount' => $totalAmount,
+            'totalCredit' => $totalCredit,
+            'totalDebit' => $totalDebit,
         ]);
     }
 

@@ -4,11 +4,9 @@
             {{ __('Transaction Details') }}
         </h2>
     </x-slot>
-
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 shadow-xl sm:rounded-lg p-8 space-y-6">
-
                 <!-- Transaction Info -->
                 <div class="space-y-4">
                     <h3 class="text-2xl font-bold text-gray-800 dark:text-gray-200"><span class="me-3">#{{ $transaction->id }}</span>Transaction Information</h3>
@@ -35,7 +33,6 @@
                         <p class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $transaction->description }}</p>
                     </div>
                 </div>
-
                 <!-- Transaction Details -->
                 <h4 class="text-2xl font-bold text-gray-800 dark:text-gray-200 mt-8">Transaction Items</h4>
                 <div class="overflow-x-auto">
@@ -60,13 +57,20 @@
                         </tbody>
                         <tfoot class="bg-gray-100 dark:bg-gray-900">
                             <tr>
-                                <td colspan="3" class="px-6 py-3 text-right text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">Total</td>
+                                <td colspan="3" class="px-6 py-3 text-right text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">Total Debit</td>
+                                <td class="px-6 py-3 whitespace-nowrap text-sm font-bold text-gray-900 dark:text-gray-100">{{ number_format($totalDebit, 2) }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="px-6 py-3 text-right text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">Total Credit</td>
+                                <td class="px-6 py-3 whitespace-nowrap text-sm font-bold text-gray-900 dark:text-gray-100">{{ number_format($totalCredit, 2) }}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="px-6 py-3 text-right text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">Grand Total</td>
                                 <td class="px-6 py-3 whitespace-nowrap text-sm font-bold text-gray-900 dark:text-gray-100">{{ number_format($totalAmount, 2) }}</td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
-
             </div>
         </div>
     </div>
