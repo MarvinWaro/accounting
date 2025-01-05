@@ -275,17 +275,24 @@ class TransactionController extends Controller
 
     public function monthsIndex($year)
     {
-        // Get the months and their respective transaction counts for the given year, excluding the excluded transactions
-        $months = DB::table('transactions')
-                    ->selectRaw('MONTH(transaction_date) as month, COUNT(*) as transaction_count')
-                    ->whereYear('transaction_date', $year)
-                    ->where('exclude', 0)  // Ensure transactions are not excluded
-                    ->groupBy('month')
-                    ->orderBy('month')
-                    ->get();
+        // Initialize an array with all 12 months
+        $months = collect(range(1, 12))->map(function($month) use ($year) {
+            // For each month, count the number of transactions that are not excluded
+            $transaction_count = DB::table('transactions')
+                                    ->whereYear('transaction_date', $year)
+                                    ->whereMonth('transaction_date', $month)
+                                    ->where('exclude', 0) // Only count active transactions
+                                    ->count();
+
+            return (object)[
+                'month' => $month,
+                'transaction_count' => $transaction_count
+            ];
+        });
 
         return view('accounting.transactions.months', compact('year', 'months'));
     }
+
 
     public function entriesIndex($year, $month)
     {

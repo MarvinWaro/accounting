@@ -6,7 +6,7 @@
     </x-slot>
 
     <div class="py-12">
-        <div class=" mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 shadow-xl sm:rounded-lg p-8 space-y-6">
                 <h1 class="text-lg font-bold">Transactions in {{ $year }}</h1>
 
