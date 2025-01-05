@@ -31,6 +31,15 @@ Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified',])
     Route::delete('/transaction/{id}', [TransactionController::class, 'destroy'])->name('transaction.destroy');
     Route::get('/transactions/{id}', [TransactionController::class, 'show'])->name('transaction.show');
 
+    // routes/web.php
+    Route::get('transactions_years', [TransactionController::class, 'yearsIndex'])->name('transaction.years');
+
+    Route::get('/transactions_years/{year}', [TransactionController::class, 'monthsIndex'])->name('transaction.months');
+
+    Route::get('/transactions_years/{year}/{month}', [TransactionController::class, 'entriesIndex'])->name('transaction.entries');
+
+
+
 });
 
 
