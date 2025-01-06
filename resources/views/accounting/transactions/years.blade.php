@@ -6,15 +6,16 @@
     </x-slot>
 
     <div class="py-12">
-        <div class=" mx-auto sm:px-6 lg:px-8">
+        <div class="mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 shadow-xl sm:rounded-lg p-8 space-y-6">
-                <h1 class="text-lg font-bold">Available Years</h1>
+                <h1 class="text-lg font-bold text-gray-800 dark:text-gray-200">Available Years</h1>
 
                 <!-- Display the years -->
                 <ul class="space-y-4">
                     @foreach ($years as $year)
                         <li>
-                            <a href="{{ route('transaction.months', ['year' => $year]) }}" class="text-blue-500 hover:text-blue-700">
+                            <a href="{{ route('transaction.months', ['year' => $year]) }}"
+                                class="text-gray-900 dark:text-gray-100 hover:text-blue-700 dark:hover:text-blue-300">
                                 {{ $year }}
                             </a>
                         </li>
@@ -24,5 +25,6 @@
         </div>
     </div>
 </x-app-layout>
+
 
 
