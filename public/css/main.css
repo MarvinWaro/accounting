@@ -89,10 +89,10 @@ From Guest / Landing page */
     color: white !important; /* Ensure the icon color is white */
 }
 
-td:nth-child(7) {
+/* td:nth-child(7) {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 100px; /* Adjust this based on your font size */
-}
+    max-width: 100px;
+} */
 
