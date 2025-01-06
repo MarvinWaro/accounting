@@ -25,17 +25,17 @@
     </style>
 
     @if (session('success') && !session('deletion'))
-    <script>
-        $(document).ready(function () {
-            Swal.fire({
-                position: "center",
-                icon: "success",
-                title: '{{ session('success') }}',
-                showConfirmButton: true, // Show the OK button
-                confirmButtonText: "OK" // Customize the button text
+        <script>
+            $(document).ready(function () {
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: '{{ session('success') }}',
+                    showConfirmButton: true, // Show the OK button
+                    confirmButtonText: "OK" // Customize the button text
+                });
             });
-        });
-    </script>
+        </script>
     @endif
 
     <div class="py-12">
@@ -49,7 +49,7 @@
                         Add New Transaction
                     </a>
 
-                    <div class="table-wrapper">
+                    <div class="table-wrapper overflow-x-auto">
                         <table id="search-table">
                             <thead>
                                 <tr>

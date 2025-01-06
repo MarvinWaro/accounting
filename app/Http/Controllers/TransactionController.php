@@ -259,4 +259,53 @@ class TransactionController extends Controller
         ]);
     }
 
+    public function yearsIndex()
+    {
+        // Get distinct years from the transaction_date column where the transaction is active and not excluded
+        $years = DB::table('transactions')
+                    ->selectRaw('YEAR(transaction_date) as year')
+                    ->distinct()
+                    ->where('exclude', 0)  // Ensure transactions are not excluded
+                    ->orderByDesc('year')  // Optional: to show the years in descending order
+                    ->pluck('year');
+
+        // Pass the years to the view
+        return view('accounting.transactions.years', compact('years'));
+    }
+
+    public function monthsIndex($year)
+    {
+        // Initialize an array with all 12 months
+        $months = collect(range(1, 12))->map(function($month) use ($year) {
+            // For each month, count the number of transactions that are not excluded
+            $transaction_count = DB::table('transactions')
+                                    ->whereYear('transaction_date', $year)
+                                    ->whereMonth('transaction_date', $month)
+                                    ->where('exclude', 0) // Only count active transactions
+                                    ->count();
+
+            return (object)[
+                'month' => $month,
+                'transaction_count' => $transaction_count
+            ];
+        });
+
+        return view('accounting.transactions.months', compact('year', 'months'));
+    }
+
+
+    public function entriesIndex($year, $month)
+    {
+        // Get the transactions for the selected year and month, where exclude is 0 (not excluded)
+        $transactions = Transaction::whereYear('transaction_date', $year)
+                                    ->whereMonth('transaction_date', $month)
+                                    ->where('exclude', 0)  // Ensure transactions are not excluded
+                                    ->with('details') // Eager load the 'details' relationship
+                                    ->get();
+
+        return view('accounting.transactions.index', compact('year', 'month', 'transactions'));
+    }
+
+
+
 }
