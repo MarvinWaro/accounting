@@ -20,6 +20,25 @@
     @endif
 
 
+    <style>
+        /* Custom styles for the table header */
+        #search-table thead th {
+            padding: 20px 24px; /* Adjust these values for top/bottom and left/right padding */
+        }
+
+        .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: white;
+        padding: 5px;
+        border: 1px solid gray;
+        border-radius: 5px;
+        z-index: 1;
+        }
+
+    </style>
+
+
     <div class="py-12">
         <div class=" mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
@@ -34,10 +53,26 @@
                         <table id="search-table">
                             <thead>
                                 <tr>
-                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-4 py-2">Action</th>
-                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-4 py-2">ID</th>
-                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-4 py-2">Account No.</th>
-                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-4 py-2">Account Description</th>
+                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">
+                                        <span class="flex items-center">
+                                            Action
+                                        </span>
+                                    </th>
+                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">
+                                        <span class="flex items-center">
+                                            ID
+                                        </span>
+                                    </th>
+                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">
+                                        <span class="flex items-center">
+                                            Account No.
+                                        </span>
+                                    </th>
+                                    <th class="bg-gray-500 text-gray-100 dark:bg-gray-900 dark:text-gray-100 px-10 py-4">
+                                        <span class="flex items-center">
+                                            Account Description
+                                        </span>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
