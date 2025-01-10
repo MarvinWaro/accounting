@@ -123,6 +123,8 @@
                                                     <form action="{{ route('transaction.destroy', $transaction->id) }}" id="delete-form-transaction-{{$transaction->id}}" method="POST" style="display: inline;">
                                                         @csrf
                                                         @method('DELETE')
+                                                        <!-- Add a hidden input for the current URL (index page) -->
+                                                        <input type="hidden" name="redirect_url" value="{{ url()->full() }}">
                                                         <button type="button" id="destroy-btn-transaction-{{$transaction->id}}" class="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                                             <i class="fa-solid fa-trash me-2"></i>Delete
                                                         </button>

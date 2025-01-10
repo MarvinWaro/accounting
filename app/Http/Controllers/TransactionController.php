@@ -250,7 +250,7 @@ class TransactionController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
         \Log::info('Destroying transaction with ID: ' . $id);
         $transaction = Transaction::findOrFail($id);
@@ -261,7 +261,11 @@ class TransactionController extends Controller
             'activate' => 0, // Deactivate the transaction
         ]);
 
-        return redirect()->route('accounting_dashboard')->with('success', 'Transaction excluded successfully.');
+        // Get the 'redirect_url' parameter passed from the index view or from the action dropdown
+        // If not provided, default to the accounting_dashboard route
+        $redirectUrl = $request->input('redirect_url', route('accounting_dashboard'));
+
+        return redirect($redirectUrl)->with('success', 'Transaction excluded successfully.');
     }
 
     public function show($id)
