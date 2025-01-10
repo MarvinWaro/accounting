@@ -64,6 +64,12 @@
                                 <td colspan="3" class="px-6 py-3 text-right text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">Total Credit</td>
                                 <td class="px-6 py-3 whitespace-nowrap text-sm font-bold text-gray-900 dark:text-gray-100">{{ number_format($totalCredit, 2) }}</td>
                             </tr>
+
+                            <!-- Add a separator row with custom width (80%) and centered with margin-auto -->
+                            <tr>
+                                <td colspan="4" class="pb-3 border-t border-gray-300 dark:border-gray-700" style="width: 80%; margin: auto;"></td>
+                            </tr>
+
                             <tr>
                                 <td colspan="3" class="px-6 py-3 text-right text-xs font-bold text-gray-500 dark:text-gray-400 uppercase">Grand Total</td>
                                 <td class="px-6 py-3 whitespace-nowrap text-sm font-bold text-gray-900 dark:text-gray-100">{{ number_format($totalAmount, 2) }}</td>
@@ -71,6 +77,13 @@
                         </tfoot>
                     </table>
                 </div>
+
+                <div class="flex justify-end gap-4 mt-10">
+                    <button onclick="window.history.back()" class="inline-flex items-center justify-center px-5 py-2.5 text-sm font-medium text-center text-white bg-secondary-600 rounded-lg hover:bg-secondary-700 focus:ring-2 focus:ring-secondary-200 dark:text-white dark:bg-secondary-800 dark:hover:bg-secondary-900 dark:focus:ring-secondary-900">
+                        Back
+                    </button>
+                </div>
+
             </div>
         </div>
     </div>
