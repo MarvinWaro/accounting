@@ -37,11 +37,11 @@
                 {{-- <x-nav-link href="{{ route('transaction.index') }}" :active="request()->routeIs('transaction.index') || request()->routeIs('transaction.create') || request()->routeIs('transaction.edit') || request()->routeIs('transaction.show')">
                     {{ __('Transactions') }}
                 </x-nav-link> --}}
-                <x-nav-link href="{{ route('uacs_index') }}" :active="request()->routeIs('uacs_index') || request()->routeIs('uacs_create') || request()->routeIs('uacs_edit')">
+                <x-nav-link href="{{ route('uacs_index') }}" :active="request()->routeIs('uacs_index') || request()->routeIs('uacs_edit')">
                     {{ __('UACS') }}
                 </x-nav-link>
                 <!-- New Tab for Transaction Overview -->
-                <x-nav-link href="{{ route('transaction.years') }}" :active="request()->routeIs('transaction.years')">
+                <x-nav-link href="{{ route('transaction.years') }}" :active="request()->routeIs('transaction.years') || request()->routeIs('transaction.months') || request()->routeIs('transaction.entries')">
                     {{ __('Transaction Overview') }}
                 </x-nav-link>
             </div>
