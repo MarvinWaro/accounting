@@ -32,11 +32,11 @@
             <!-- Navigation Links -->
             <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                 <x-nav-link href="{{ route('accounting_dashboard') }}" :active="request()->routeIs('accounting_dashboard')">
-                    {{ __('Accounting Dashboard') }}
+                    {{ __('Dashboard') }}
                 </x-nav-link>
-                <x-nav-link href="{{ route('transaction.index') }}" :active="request()->routeIs('transaction.index') || request()->routeIs('transaction.create') || request()->routeIs('transaction.edit') || request()->routeIs('transaction.show')">
+                {{-- <x-nav-link href="{{ route('transaction.index') }}" :active="request()->routeIs('transaction.index') || request()->routeIs('transaction.create') || request()->routeIs('transaction.edit') || request()->routeIs('transaction.show')">
                     {{ __('Transactions') }}
-                </x-nav-link>
+                </x-nav-link> --}}
                 <x-nav-link href="{{ route('uacs_index') }}" :active="request()->routeIs('uacs_index') || request()->routeIs('uacs_create') || request()->routeIs('uacs_edit')">
                     {{ __('UACS') }}
                 </x-nav-link>

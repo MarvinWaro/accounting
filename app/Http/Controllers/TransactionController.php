@@ -19,7 +19,7 @@ class TransactionController extends Controller
             ->orderBy('id', 'DESC') // Order by id, to avoid confusion with reused IDs
             ->get();
 
-        return view('accounting.transactions.transaction_list', compact('transactions'));
+        return view('accounting.accounting_dashboard', compact('transactions'));
     }
 
     public function create()
@@ -91,7 +91,7 @@ class TransactionController extends Controller
                 }
 
                 DB::commit();
-                return redirect()->route('transaction.index')->with('success', 'Excluded transaction reused successfully!');
+                return redirect()->route('accounting_dashboard')->with('success', 'Excluded transaction reused successfully!');
             } else {
                 // Create a new transaction if no excluded transaction exists
                 $transaction = Transaction::create([
@@ -115,7 +115,7 @@ class TransactionController extends Controller
                 }
 
                 DB::commit();
-                return redirect()->route('transaction.index')->with('success', 'Transaction created successfully!');
+                return redirect()->route('accounting_dashboard')->with('success', 'Transaction created successfully!');
             }
         } catch (\Exception $e) {
             DB::rollBack();
@@ -220,7 +220,7 @@ class TransactionController extends Controller
 
             DB::commit();
 
-            return redirect()->route('transaction.index')->with('success', 'Transaction updated successfully!');
+            return redirect()->route('accounting_dashboard')->with('success', 'Transaction updated successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withErrors(['An error occurred while updating the transaction: ' . $e->getMessage()]);
@@ -238,7 +238,7 @@ class TransactionController extends Controller
             'activate' => 0, // Deactivate the transaction
         ]);
 
-        return redirect()->route('transaction.index')->with('success', 'Transaction excluded successfully.');
+        return redirect()->route('accounting_dashboard')->with('success', 'Transaction excluded successfully.');
     }
 
     public function show($id)

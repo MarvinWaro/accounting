@@ -10,9 +10,9 @@ Route::get('/', function () {
 
 Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified',])->group(function () {
 
-    Route::get('accounting_dashboard', function () {
-        return view('accounting.accounting_dashboard');
-    })->name('accounting_dashboard');
+    // Route::get('accounting_dashboard', function () {
+    //     return view('accounting.accounting_dashboard');
+    // })->name('accounting_dashboard');
 
     // Display list of accounts
     Route::get('uacs_index', [AccountController::class, 'index'])->name('uacs_index');
@@ -23,7 +23,7 @@ Route::middleware(['auth:sanctum',config('jetstream.auth_session'),'verified',])
     Route::delete('uacs/{id}', [AccountController::class, 'destroy'])->name('uacs_destroy');
 
 
-    Route::get('transaction_index', [TransactionController::class, 'index'])->name('transaction.index');
+    Route::get('accounting_dashboard', [TransactionController::class, 'index'])->name('accounting_dashboard');
     Route::get('transaction_create', [TransactionController::class, 'create'])->name('transaction.create');
     Route::post('transaction_store', [TransactionController::class, 'store'])->name('transaction.store');
     Route::get('transaction/{id}/edit', [TransactionController::class, 'edit'])->name('transaction.edit');
