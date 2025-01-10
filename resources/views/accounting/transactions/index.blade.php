@@ -23,6 +23,21 @@
 
     </style>
 
+
+    @if (session('success') && !session('deletion'))
+        <script>
+            $(document).ready(function () {
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: '{{ session('success') }}',
+                    showConfirmButton: true, // Show the OK button
+                    confirmButtonText: "OK" // Customize the button text
+                });
+            });
+        </script>
+    @endif
+
     <div class="py-12">
         <div class="mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 shadow-xl sm:rounded-lg p-8 space-y-6">

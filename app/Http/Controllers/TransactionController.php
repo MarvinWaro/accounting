@@ -129,6 +129,9 @@ class TransactionController extends Controller
         $transaction = Transaction::withTrashed()->findOrFail($id);
         $accounts = Account::all(); // Assuming you're fetching the accounts from the database
 
+        // Store the previous URL in the session (from where the user clicked 'edit')
+        session()->put('previous_url', url()->previous());
+
         // Pass transaction details to the view
         return view('accounting.transactions.edit_transaction', compact('transaction', 'accounts'));
     }
@@ -220,7 +223,11 @@ class TransactionController extends Controller
 
             DB::commit();
 
-            return redirect()->route('accounting_dashboard')->with('success', 'Transaction updated successfully!');
+            // Redirect to the previous URL if available, otherwise to the dashboard
+            $previousUrl = session()->get('previous_url', route('accounting_dashboard'));
+            session()->forget('previous_url'); // Clear the previous URL from the session
+
+            return redirect($previousUrl)->with('success', 'Transaction updated successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withErrors(['An error occurred while updating the transaction: ' . $e->getMessage()]);
