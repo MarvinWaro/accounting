@@ -24,10 +24,15 @@ class TransactionController extends Controller
 
     public function create()
     {
-        // Fetch active accoun  ts from the database
+        // Fetch active accounts from the database
         $accounts = Account::where('activate', 1)->get();
+
+        // Store the previous URL in the session (from where the user clicked 'Add')
+        session()->put('previous_url', url()->previous());
+
         return view('accounting.transactions.create_transaction', compact('accounts'));
     }
+
 
     public function store(Request $request)
     {
@@ -91,7 +96,12 @@ class TransactionController extends Controller
                 }
 
                 DB::commit();
-                return redirect()->route('accounting_dashboard')->with('success', 'Excluded transaction reused successfully!');
+
+                // Redirect to the previous URL if available, otherwise to the dashboard
+                $previousUrl = session()->get('previous_url', route('accounting_dashboard'));
+                session()->forget('previous_url'); // Clear the previous URL from the session
+
+                return redirect($previousUrl)->with('success', 'Excluded transaction reused successfully!');
             } else {
                 // Create a new transaction if no excluded transaction exists
                 $transaction = Transaction::create([
@@ -115,13 +125,19 @@ class TransactionController extends Controller
                 }
 
                 DB::commit();
-                return redirect()->route('accounting_dashboard')->with('success', 'Transaction created successfully!');
+
+                // Redirect to the previous URL if available, otherwise to the dashboard
+                $previousUrl = session()->get('previous_url', route('accounting_dashboard'));
+                session()->forget('previous_url'); // Clear the previous URL from the session
+
+                return redirect($previousUrl)->with('success', 'Transaction created successfully!');
             }
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withErrors(['An error occurred: ' . $e->getMessage()]);
         }
     }
+
 
     public function edit($id)
     {
