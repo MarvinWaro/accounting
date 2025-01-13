@@ -11,7 +11,7 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
 
             <!-- Invoice -->
-            <div class="max-w-[85rem] px-4 sm:px-6 lg:px-8 mx-auto my-6 sm:my-12">
+            <div class=" max-w-[85rem] px-4 sm:px-6 lg:px-8 mx-auto my-6 sm:my-12">
                 <!-- Header Section -->
                 <div class="flex justify-between items-center mb-8 pb-6 border-b border-gray-200 dark:border-neutral-700">
                     <h2 class="text-3xl font-bold text-gray-800 dark:text-neutral-200">Invoice</h2>
