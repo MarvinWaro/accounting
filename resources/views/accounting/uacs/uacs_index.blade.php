@@ -65,7 +65,6 @@
 
     </style>
 
-
     <div class="py-12">
         <div class=" mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
@@ -163,7 +162,8 @@
 
                                         <!-- Formatted account number -->
                                         <td>{{ substr($account->account_no, 0, 1) }}-{{ substr($account->account_no, 1, 2) }}-{{ substr($account->account_no, 3, 2) }}-{{ substr($account->account_no, 5, 3) }}-{{ substr($account->account_no, 8, 2) }}</td>
-                                        <td>{{ \Illuminate\Support\Str::limit($account->description, 100, '...') }}</td>
+                                        {{-- <td>{{ \Illuminate\Support\Str::limit($account->description, 100, '...') }}</td> --}}
+                                        <td>{{ $account->description }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

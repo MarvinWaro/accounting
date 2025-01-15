@@ -33,7 +33,6 @@ class TransactionController extends Controller
         return view('accounting.transactions.create_transaction', compact('accounts'));
     }
 
-
     public function store(Request $request)
     {
         // Remove commas and clean 'amount' values before validation
@@ -134,10 +133,10 @@ class TransactionController extends Controller
             }
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error('Transaction error: ' . $e->getMessage()); // Log the error
             return redirect()->back()->withErrors(['An error occurred: ' . $e->getMessage()]);
         }
     }
-
 
     public function edit($id)
     {
@@ -252,21 +251,32 @@ class TransactionController extends Controller
 
     public function destroy($id, Request $request)
     {
+        // Log the ID being deleted
         \Log::info('Destroying transaction with ID: ' . $id);
+
+        // Find the transaction by ID
         $transaction = Transaction::findOrFail($id);
 
-        // Mark as excluded and deactivate the transaction
+        // Check if the transaction is already excluded or deactivated
+        if ($transaction->exclude == 1 || $transaction->activate == 0) {
+            return redirect()->back()->withErrors('Transaction is already excluded or inactive.');
+        }
+
+        // Mark the transaction as excluded and deactivated
         $transaction->update([
             'exclude' => 1,  // Mark as excluded
             'activate' => 0, // Deactivate the transaction
         ]);
 
-        // Get the 'redirect_url' parameter passed from the index view or from the action dropdown
-        // If not provided, default to the accounting_dashboard route
+        // Log successful exclusion
+        \Log::info('Transaction ID ' . $id . ' marked as excluded.');
+
+        // Get the 'redirect_url' parameter or default to dashboard
         $redirectUrl = $request->input('redirect_url', route('accounting_dashboard'));
 
         return redirect($redirectUrl)->with('success', 'Transaction excluded successfully.');
     }
+
 
     public function show($id)
     {
@@ -319,7 +329,6 @@ class TransactionController extends Controller
 
         return view('accounting.transactions.months', compact('year', 'months'));
     }
-
 
     public function entriesIndex($year, $month)
     {

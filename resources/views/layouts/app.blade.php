@@ -31,6 +31,9 @@
         <script src="//unpkg.com/alpinejs" defer></script>
         <!-- Include SweetAlert2 JS -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <!-- Tailwind and Flowbite JS (put this in your layout file) -->
+        <script src="https://unpkg.com/flowbite@1.6.4/dist/flowbite.min.js"></script>
+
 
 @include('partials._footer')
 
