@@ -251,7 +251,7 @@ class TransactionController extends Controller
 
     public function destroy($id, Request $request)
     {
-        // Log the ID being deleted
+        // Log the ID being deleted for debugging
         \Log::info('Destroying transaction with ID: ' . $id);
 
         // Find the transaction by ID
@@ -276,7 +276,6 @@ class TransactionController extends Controller
 
         return redirect($redirectUrl)->with('success', 'Transaction excluded successfully.');
     }
-
 
     public function show($id)
     {
