@@ -296,9 +296,6 @@
                             });
                         });
                     </script>
-
-
-
                 </section>
 
             </div>

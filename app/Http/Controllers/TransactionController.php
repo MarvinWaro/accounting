@@ -33,7 +33,6 @@ class TransactionController extends Controller
         return view('accounting.transactions.create_transaction', compact('accounts'));
     }
 
-
     public function store(Request $request)
     {
         // Remove commas and clean 'amount' values before validation
@@ -134,10 +133,10 @@ class TransactionController extends Controller
             }
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error('Transaction error: ' . $e->getMessage()); // Log the error
             return redirect()->back()->withErrors(['An error occurred: ' . $e->getMessage()]);
         }
     }
-
 
     public function edit($id)
     {
@@ -154,14 +153,19 @@ class TransactionController extends Controller
 
     public function update(Request $request, $id)
     {
+        // Ensure 'activate' and 'exclude' are set to 0 if not present in the request (checkboxes unchecked)
+        $request->merge([
+            'activate' => $request->has('activate') ? 1 : 1, // Keep active as 1 by default (or adjust as needed)
+            'exclude' => $request->has('exclude') ? 1 : 0,
+        ]);
+
         // Remove commas and clean 'amount' values before validation
         if ($request->has('details')) {
             $details = $request->input('details');
             foreach ($details as &$detail) {
                 if (isset($detail['amount'])) {
-                    // Remove commas from the 'amount' field
+                    // Remove commas and convert to float
                     $detail['amount'] = preg_replace('/,/', '', $detail['amount']);
-                    // Convert amount to a float (or decimal)
                     $detail['amount'] = (float) $detail['amount'];
                 }
             }
@@ -171,7 +175,7 @@ class TransactionController extends Controller
         // Fetch the transaction, including excluded ones
         $transaction = Transaction::withTrashed()->findOrFail($id);
 
-        // Define custom validation rules and custom attribute names
+        // Validate the request
         $validated = $request->validate([
             'transaction_date' => 'required|date',
             'jev' => [
@@ -181,7 +185,6 @@ class TransactionController extends Controller
                 Rule::unique('transactions', 'jev_no')
                     ->ignore($transaction->id)
                     ->where(function ($query) use ($transaction) {
-                        // Ensure that the JEV number is unique across active transactions only
                         return $query->where('exclude', 0);
                     }),
             ],
@@ -195,39 +198,27 @@ class TransactionController extends Controller
             'details.*.amount' => 'required|numeric|min:0|max:100000000000',
             'activate' => 'nullable|boolean',
             'exclude' => 'nullable|boolean',
-        ], [], [
-            'transaction_date' => 'Transaction Date',
-            'jev' => 'JEV Number',
-            'description' => 'Description',
-            'ref' => 'Reference',
-            'payee' => 'Payee',
-            'details' => 'Transaction Details',
-            'details.*.particulars' => 'Particulars',
-            'details.*.uacs_code' => 'UACS Code',
-            'details.*.mode_of_payment' => 'Mode of Payment',
-            'details.*.amount' => 'Amount',
-            'activate' => 'Activate Status',
-            'exclude' => 'Exclude Status',
         ]);
 
         try {
             DB::beginTransaction();
 
-            // Update the transaction main data, including 'activate' and 'exclude'
+            // Update the transaction, preserving the 'active' field (do not overwrite it)
             $transaction->update([
                 'transaction_date' => $validated['transaction_date'],
                 'jev_no' => $validated['jev'],
                 'description' => $validated['description'],
                 'ref' => $validated['ref'],
                 'payee' => $validated['payee'],
-                'activate' => isset($validated['activate']) ? $validated['activate'] : 0,
-                'exclude' => isset($validated['exclude']) ? $validated['exclude'] : 0,
+                'exclude' => $validated['exclude'],
+                // Do not overwrite 'active'; keep it as is (or set to 1 if needed)
+                'activate' => isset($validated['activate']) ? $validated['activate'] : 1,
             ]);
 
-            // Remove all existing details first
+            // Remove all existing details (assumption: 'details' is a relationship with a 'hasMany' relation)
             $transaction->details()->delete();
 
-            // Insert new details after removing commas from amount
+            // Insert new details
             foreach ($validated['details'] as $detail) {
                 $transaction->details()->create([
                     'particulars' => $detail['particulars'],
@@ -239,10 +230,11 @@ class TransactionController extends Controller
 
             DB::commit();
 
-            // Redirect to the previous URL if available, otherwise to the dashboard
+            // Redirect back to the previous URL or the dashboard
             $previousUrl = session()->get('previous_url', route('accounting_dashboard'));
-            session()->forget('previous_url'); // Clear the previous URL from the session
+            session()->forget('previous_url');
 
+            // Flash success message
             return redirect($previousUrl)->with('success', 'Transaction updated successfully!');
         } catch (\Exception $e) {
             DB::rollBack();
@@ -250,19 +242,32 @@ class TransactionController extends Controller
         }
     }
 
+
+
+
     public function destroy($id, Request $request)
     {
+        // Log the ID being deleted for debugging
         \Log::info('Destroying transaction with ID: ' . $id);
+
+        // Find the transaction by ID
         $transaction = Transaction::findOrFail($id);
 
-        // Mark as excluded and deactivate the transaction
+        // Check if the transaction is already excluded or deactivated
+        if ($transaction->exclude == 1 || $transaction->activate == 0) {
+            return redirect()->back()->withErrors('Transaction is already excluded or inactive.');
+        }
+
+        // Mark the transaction as excluded and deactivated
         $transaction->update([
             'exclude' => 1,  // Mark as excluded
             'activate' => 0, // Deactivate the transaction
         ]);
 
-        // Get the 'redirect_url' parameter passed from the index view or from the action dropdown
-        // If not provided, default to the accounting_dashboard route
+        // Log successful exclusion
+        \Log::info('Transaction ID ' . $id . ' marked as excluded.');
+
+        // Get the 'redirect_url' parameter or default to dashboard
         $redirectUrl = $request->input('redirect_url', route('accounting_dashboard'));
 
         return redirect($redirectUrl)->with('success', 'Transaction excluded successfully.');
@@ -319,7 +324,6 @@ class TransactionController extends Controller
 
         return view('accounting.transactions.months', compact('year', 'months'));
     }
-
 
     public function entriesIndex($year, $month)
     {

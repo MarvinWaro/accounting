@@ -114,7 +114,6 @@
                                             </svg>
                                         </button>
 
-                                        <!-- Dropdown menu -->
                                         <div id="dropdown_{{ $transaction->id }}" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
                                             <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownButton_{{ $transaction->id }}">
                                                 <li>
@@ -127,37 +126,48 @@
                                                         <i class="fa-solid fa-pen-to-square me-2"></i>Edit
                                                     </a>
                                                 </li>
+                                                <hr class="w-[90%] mx-auto">
                                                 <li>
-                                                    <form action="{{ route('transaction.destroy', $transaction->id) }}" id="delete-form-transaction-{{$transaction->id}}" method="POST" style="display: inline;">
+                                                    <form action="{{ route('transaction.destroy', $transaction->id) }}" method="POST" class="delete-form" id="delete-form-transaction-{{$transaction->id}}">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="button" id="destroy-btn-transaction-{{$transaction->id}}" class="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                                            <i class="fa-solid fa-trash me-2"></i>Delete
+                                                        <button id="destroy-btn-transaction-{{$transaction->id}}" type="button" class="delete-button w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white flex items-center focus:outline-none">
+                                                            <i class="fa-solid fa-trash me-2 text-red-500"></i><span class="text-red-500">Delete</span>
                                                         </button>
                                                     </form>
-                                                </li>
-                                                <script>
-                                                    $('#destroy-btn-transaction-{{$transaction->id}}').on('click', function(e){
-                                                        e.preventDefault(); // Prevent the default form submission behavior
-                                                        Swal.fire({
-                                                            title: "Are you sure?",
-                                                            text: "You won't be able to revert this!",
-                                                            icon: "warning",
-                                                            showCancelButton: true,
-                                                            confirmButtonColor: "#3085d6",
-                                                            cancelButtonColor: "#d33",
-                                                            confirmButtonText: "Yes, delete it!"
-                                                        }).then((result) => {
-                                                            if (result.isConfirmed) {
-                                                                // Submit the form if confirmed
-                                                                $('#delete-form-transaction-{{$transaction->id}}').submit();
-                                                            }
+                                                    <script>
+                                                        document.addEventListener('DOMContentLoaded', function() {
+                                                            // Attach click event to all delete buttons
+                                                            document.querySelectorAll('.delete-button').forEach(function(button) {
+                                                                button.addEventListener('click', function(e) {
+                                                                    e.preventDefault(); // Prevent default action
+
+                                                                    // Get the transaction ID from the button's ID
+                                                                    const transactionId = this.id.split('destroy-btn-transaction-')[1];
+
+                                                                    Swal.fire({
+                                                                        title: "Are you sure?",
+                                                                        text: `You are about to delete transaction with ID: ${transactionId}`,  // Show the transaction ID
+                                                                        icon: "warning",
+                                                                        showCancelButton: true,
+                                                                        confirmButtonColor: "#3085d6",
+                                                                        cancelButtonColor: "#d33",
+                                                                        confirmButtonText: "Yes, delete it!"
+                                                                    }).then((result) => {
+                                                                        if (result.isConfirmed) {
+                                                                            // Submit the form corresponding to the clicked button
+                                                                            document.getElementById(`delete-form-transaction-${transactionId}`).submit();
+                                                                        }
+                                                                    });
+                                                                });
+                                                            });
                                                         });
-                                                    });
-                                                </script>
+                                                    </script>
+                                                </li>
                                             </ul>
                                         </div>
                                     </td>
+
 
                                     <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ $transaction->transaction_date }}</td>
                                     <td>{{ $transaction->jev_no }}</td>

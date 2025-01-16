@@ -19,12 +19,21 @@
                         <a href="{{ route('transaction.years') }}" class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">Transaction Years</a>
                     </div>
                 </li>
+                <li aria-current="page">
+                    <div class="flex items-center">
+                        <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                        </svg>
+
+                        <a href="{{ route('transaction.months', ['year' => $year]) }}" class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">Transaction for {{ $year }}</a>
+                    </div>
+                </li>
                 <li>
                     <div class="flex items-center">
                         <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                         </svg>
-                        <a href="{{ route('transaction.months', ['year' => $year]) }}" class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">{{ \Carbon\Carbon::createFromFormat('m', $month)->format('F') }}, {{ $year }}</a>
+                        <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">{{ \Carbon\Carbon::createFromFormat('m', $month)->format('F') }}, {{ $year }}</span>
                     </div>
                 </li>
             </ol>
@@ -133,6 +142,7 @@
                                                         <i class="fa-solid fa-pen-to-square me-2"></i>Edit
                                                     </a>
                                                 </li>
+                                                <hr class="w-[90%] mx-auto">
                                                 <li>
                                                     <form action="{{ route('transaction.destroy', $transaction->id) }}" id="delete-form-transaction-{{$transaction->id}}" method="POST" style="display: inline;">
                                                         @csrf
@@ -142,7 +152,7 @@
                                                         <input type="hidden" name="redirect_url" value="{{ url()->full() }}">
 
                                                         <button type="button" id="destroy-btn-transaction-{{$transaction->id}}" class="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                                            <i class="fa-solid fa-trash me-2"></i>Delete
+                                                            <i class="fa-solid fa-trash me-2 text-red-500"></i><span class="text-red-500"></i>Delete
                                                         </button>
                                                     </form>
                                                 </li>
