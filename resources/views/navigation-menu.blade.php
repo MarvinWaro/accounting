@@ -34,11 +34,14 @@
                 <x-nav-link href="{{ route('accounting_dashboard') }}" :active="request()->routeIs('accounting_dashboard')">
                     {{ __('Dashboard') }}
                 </x-nav-link>
-                {{-- <x-nav-link href="{{ route('transaction.index') }}" :active="request()->routeIs('transaction.index') || request()->routeIs('transaction.create') || request()->routeIs('transaction.edit') || request()->routeIs('transaction.show')">
-                    {{ __('Transactions') }}
-                </x-nav-link> --}}
                 <x-nav-link href="{{ route('uacs_index') }}" :active="request()->routeIs('uacs_index') || request()->routeIs('uacs_edit')">
                     {{ __('UACS') }}
+                </x-nav-link>
+                <x-nav-link href="#">
+                    {{ __('FUND 101') }}
+                </x-nav-link>
+                <x-nav-link href="#">
+                    {{ __('FUND 151') }}
                 </x-nav-link>
                 <!-- New Tab for Transaction Overview -->
                 <x-nav-link href="{{ route('transaction.years') }}" :active="request()->routeIs('transaction.years') || request()->routeIs('transaction.months') || request()->routeIs('transaction.entries')">

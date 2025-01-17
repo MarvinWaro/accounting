@@ -8,6 +8,9 @@ use App\Models\Account;
 use App\Models\TransactionDetail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule; // Add this line
+use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
+
 
 
 class TransactionController extends Controller
@@ -49,10 +52,10 @@ class TransactionController extends Controller
             $request->merge(['details' => $details]); // Merge cleaned data back into the request
         }
 
-        // Define custom validation rules, excluding transactions that are marked as 'exclude'
+        // Validate the request data
         $validated = $request->validate([
             'transaction_date' => 'required|date',
-            'jev' => 'required|string|max:255|unique:transactions,jev_no,NULL,id,exclude,0', // Ensure uniqueness only for active transactions
+            'jev' => 'required|string|max:255|unique:transactions,jev_no,NULL,id,exclude,0',
             'description' => 'nullable|string',
             'ref' => 'nullable|string|max:255',
             'payee' => 'required|string|max:255',
@@ -65,6 +68,9 @@ class TransactionController extends Controller
 
         try {
             DB::beginTransaction();
+
+            // Convert the transaction date to the correct format before saving it
+            $validated['transaction_date'] = Carbon::createFromFormat('m/d/Y', $validated['transaction_date'])->format('Y-m-d');
 
             // Check if there is an excluded transaction to reuse
             $excludedTransaction = Transaction::where('exclude', 1)->first();
@@ -203,6 +209,9 @@ class TransactionController extends Controller
         try {
             DB::beginTransaction();
 
+            // Convert 'MM/DD/YYYY' format to 'YYYY-MM-DD' before saving
+            $validated['transaction_date'] = \Carbon\Carbon::createFromFormat('m/d/Y', $validated['transaction_date'])->format('Y-m-d');
+
             // Update the transaction, preserving the 'active' field (do not overwrite it)
             $transaction->update([
                 'transaction_date' => $validated['transaction_date'],
@@ -241,9 +250,6 @@ class TransactionController extends Controller
             return redirect()->back()->withErrors(['An error occurred while updating the transaction: ' . $e->getMessage()]);
         }
     }
-
-
-
 
     public function destroy($id, Request $request)
     {
