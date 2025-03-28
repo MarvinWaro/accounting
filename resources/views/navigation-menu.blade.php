@@ -4,23 +4,7 @@
         <div class="flex justify-between h-16">
             <div class="flex">
 
-                <!-- Dark Mode Toggle Switch -->
-                <label class="me-4 relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" id="theme-toggle" class="sr-only peer" />
-                    <!-- Toggle Switch Background -->
-                    <div class="w-14 h-8 bg-gray-200 dark:bg-blue-500 rounded-full peer-focus:outline-none peer-checked:bg-yellow-300 peer-checked:dark:bg-gray-600 transition-colors duration-300 ease-in-out flex items-center justify-between px-1">
-                        <!-- Sun Icon (Light Mode) -->
-                        <span class="w-6 h-6 text-yellow-600 flex items-center justify-center">
-                            <i class="fa-solid fa-sun"></i>
-                        </span>
-                        <!-- Moon Icon (Dark Mode) -->
-                        <span class="w-6 h-6 text-gray-200 flex items-center justify-center">
-                            <i class="fa-solid fa-moon"></i>
-                        </span>
-                    </div>
-                    <!-- Toggle Switch Button -->
-                    <span class="absolute left-1 top-5 w-6 h-6 bg-white rounded-full peer-checked:translate-x-6 transition-transform duration-300 ease-in-out"></span>
-                </label>
+
 
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
@@ -37,12 +21,10 @@
                 <x-nav-link href="{{ route('uacs_index') }}" :active="request()->routeIs('uacs_index') || request()->routeIs('uacs_edit')">
                     {{ __('UACS') }}
                 </x-nav-link>
-                <x-nav-link href="#">
-                    {{ __('FUND 101') }}
-                </x-nav-link>
-                <x-nav-link href="#">
-                    {{ __('FUND 151') }}
-                </x-nav-link>
+                <x-nav-dropdown href="#" :dropdown="true" class="flex justify-center items-center">
+                  Others
+               </x-nav-dropdown>
+
                 <!-- New Tab for Transaction Overview -->
                 <x-nav-link href="{{ route('transaction.years') }}" :active="request()->routeIs('transaction.years') || request()->routeIs('transaction.months') || request()->routeIs('transaction.entries')">
                     {{ __('Transaction Overview') }}
@@ -106,7 +88,19 @@
                 @endif
 
                 <!-- Settings Dropdown -->
-                <div class="ms-3 relative">
+                <div class="ms-3 relative flex items-center justify-between gap-x-8">
+                  <!-- Dark Mode Toggle Switch -->
+                  <!-- Theme Toggle -->
+                  <div class="ms-auto flex items-center">
+                     <button id="theme-toggle" type="button" class="text-white dark:text-gray-400  dark:hover:bg-gray-700  rounded-full text-sm p-2.5">
+                         <svg id="theme-toggle-sun-icon" class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                             <path d="M10 15a5 5 0 1 0 0-10 5 5 0 0 0 0 10Zm0-11a1 1 0 0 0 1-1V1a1 1 0 0 0-2 0v2a1 1 0 0 0 1 1Zm0 12a1 1 0 0 0-1 1v2a1 1 0 1 0 2 0v-2a1 1 0 0 0-1-1ZM4.343 5.757a1 1 0 0 0 1.414-1.414L4.343 2.929a1 1 0 0 0-1.414 1.414l1.414 1.414Zm11.314 8.486a1 1 0 0 0-1.414 1.414l1.414 1.414a1 1 0 0 0 1.414-1.414l-1.414-1.414ZM4 10a1 1 0 0 0-1-1H1a1 1 0 0 0 0 2h2a1 1 0 0 0 1-1Zm15-1h-2a1 1 0 1 0 0 2h2a1 1 0 0 0 0-2ZM4.343 14.243l-1.414 1.414a1 1 0 1 0 1.414 1.414l1.414-1.414a1 1 0 0 0-1.414-1.414ZM14.95 6.05a1 1 0 0 0 .707-.293l1.414-1.414a1 1 0 1 0-1.414-1.414l-1.414 1.414a1 1 0 0 0 .707 1.707Z"></path>
+                         </svg>
+                         <svg id="theme-toggle-moon-icon" class="hidden w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                             <path d="M17.29 13.29A8 8 0 016.71 2.71 8 8 0 1017.29 13.29z"></path>
+                         </svg>
+                     </button>
+                  </div>
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
                             @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
@@ -350,4 +344,3 @@
         document.documentElement.classList.remove('dark');
     }
 </script> --}}
-

@@ -29,7 +29,7 @@
                 </li>
             </ol>
         </nav>
-        
+
     </x-slot>
 
     <div class="py-12">
@@ -56,9 +56,14 @@
 
                                     <div class="flex flex-col space-y-2 mt-6">
                                         <!-- GJ Recap link -->
-                                        <a href="#!" class="text-blue-600 bg-blue-100 hover:bg-blue-200 focus:ring-2 focus:outline-none focus:ring-blue-400 dark:bg-blue-700 dark:text-white dark:hover:bg-blue-600 font-semibold rounded-lg text-sm px-5 py-2 w-full text-center">
+                                        {{-- <a href="{{ route('recap') }}" class="text-blue-600 bg-blue-100 hover:bg-blue-200 focus:ring-2 focus:outline-none focus:ring-blue-400 dark:bg-blue-700 dark:text-white dark:hover:bg-blue-600 font-semibold rounded-lg text-sm px-5 py-2 w-full text-center">
                                             GJ Recap
-                                        </a>
+                                        </a> --}}
+                                        <!-- GJ Recap Button -->
+                                       <button class="gj-recap-btn text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer"
+                                       data-month="{{ $month->month }}">
+                                          GJ Recap
+                                       </button>
 
                                         <!-- Transaction List link -->
                                         <a href="{{ route('transaction.entries', ['year' => $year, 'month' => $month->month]) }}" class="text-blue-600 bg-blue-100 hover:bg-blue-200 focus:ring-2 focus:outline-none focus:ring-blue-400 dark:bg-blue-700 dark:text-white dark:hover:bg-blue-600 font-semibold rounded-lg text-sm px-5 py-2 w-full text-center">
@@ -70,10 +75,59 @@
                         </div>
                     @endforeach
                 </section>
-
+                <!-- Gj Recap modal-->
+                <x-gj-recap />
             </div>
         </div>
     </div>
 </x-app-layout>
+<script>
+   document.addEventListener("DOMContentLoaded", function () {
+      document.querySelectorAll(".gj-recap-btn").forEach(button => {
+         button.addEventListener("click", function () {
+               let month = this.getAttribute("data-month");
+               let monthName = new Date(2023, month - 1).toLocaleString('en', { month: 'long' });
 
+               fetch(`/transactions/recap/${month}`)
+                  .then(response => response.json())
+                  .then(data => {
+                     let transactionsHTML = "";
+                     let totalDebit = 0;
+                     let totalCredit = 0;
 
+                     data.forEach(transaction => {
+                           transactionsHTML += `
+                              <div class="grid grid-cols-3 sm:grid-cols-5 gap-4">
+                                 <div class="col-span-3 sm:col-span-2">
+                                       <p class="font-medium text-gray-800 dark:text-neutral-200">${transaction.particulars}</p>
+                                 </div>
+                                 <div class="text-gray-800 dark:text-neutral-200">${transaction.code}</div>
+                                 <div class="text-gray-800 dark:text-neutral-200">${transaction.debit}</div>
+                                 <div class="text-end text-gray-800 dark:text-neutral-200">${transaction.credit}</div>
+                              </div>
+                           `;
+                           totalDebit += parseFloat(transaction.debit);
+                           totalCredit += parseFloat(transaction.credit);
+                     });
+
+                     // Insert transactions into modal
+                     document.getElementById("transactions-content").innerHTML = transactionsHTML;
+
+                     // Update totals
+                     document.getElementById("total-debit").innerText = `₱${totalDebit.toFixed(2)}`;
+                     document.getElementById("total-credit").innerText = `₱${totalCredit.toFixed(2)}`;
+
+                     // Show the modal
+                     document.getElementById("gj-recap-modal").classList.remove("hidden");
+                  })
+                  .catch(error => {
+                     document.getElementById("transactions-content").innerHTML = "<p class='text-red-500'>Error loading transactions.</p>";
+                  });
+         });
+      });
+   });
+
+   function closeModal() {
+      document.getElementById("gj-recap-modal").classList.add("hidden");
+   }
+</script>

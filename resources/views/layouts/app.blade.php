@@ -23,7 +23,7 @@
         @stack('modals')
 
         @livewireScripts
-
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
         {{-- flowbite --}}
 
         {{-- JS LINK SCRIPT TO PUCLIC --}}
@@ -36,4 +36,3 @@
 
 
 @include('partials._footer')
-

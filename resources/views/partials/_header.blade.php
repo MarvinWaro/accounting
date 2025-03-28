@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{ darkMode: localStorage.getItem('dark_mode') === 'true' }"
+   x-init="$watch('darkMode', value => localStorage.setItem('dark_mode', value))"
+   :class="{ 'dark': darkMode }">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,7 +23,7 @@
 
 
         <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/theme-toggle.js'])
 
         <!-- Styles -->
         @livewireStyles
@@ -44,6 +46,7 @@
         <!-- Include SweetAlert2 CSS -->
         <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
         {{-- <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script> --}}
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     </head>
 
 <body class="font-sans antialiased">
