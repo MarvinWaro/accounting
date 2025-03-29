@@ -37,7 +37,7 @@
                 </div>
 
                 <!-- Table Section -->
-                <div class="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 p-6 rounded-lg shadow-sm space-y-4">
+                <div class="bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 p-6 rounded-lg shadow-xs space-y-4">
                     <div class="hidden sm:grid sm:grid-cols-5 pb-3 border-b border-gray-200 dark:border-neutral-700">
                         <div class="col-span-2 text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Particulars</div>
                         <div class="text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">Code</div>

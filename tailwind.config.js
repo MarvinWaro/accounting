@@ -1,6 +1,7 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
 import forms from '@tailwindcss/forms';
 import typography from '@tailwindcss/typography';
+import flowbite from 'flowbite/plugin';
 import Swal from 'sweetalert2'
 
 /** @type {import('tailwindcss').Config} */
@@ -36,15 +37,8 @@ export default {
     },
 
     plugins: [
-        require('@tailwindcss/forms'),
-        require('@tailwindcss/typography'),
-        require('flowbite/plugin')({
-            datatables: true, // Enable Flowbite datatables
-            charts: true,    // Enable Flowbite charts
-        })
+      forms,
+      typography,
+      flowbite
     ],
 };
-
-
-
-

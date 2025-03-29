@@ -69,7 +69,7 @@
         <div class=" mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="mx-5 my-5">
-                    <a href="{{ route('uacs_create') }}" type="button" class="my-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    <a href="{{ route('uacs_create') }}" type="button" class="my-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-hidden focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 me-3">
                             <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z" clip-rule="evenodd" />
                         </svg>
@@ -108,7 +108,7 @@
                                             <button
                                                 id="dropdownDefaultButton"
                                                 data-dropdown-toggle="dropdown{{$account->id}}"
-                                                class="text-gray-800 bg-transparent border border-gray-300 hover:text-gray-500 focus:ring-4 focus:outline-none focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-transparent dark:border-gray-600 dark:text-gray-300 dark:hover:text-gray-400 dark:focus:ring-gray-800"
+                                                class="text-gray-800 bg-transparent border border-gray-300 hover:text-gray-500 focus:ring-4 focus:outline-hidden focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-transparent dark:border-gray-600 dark:text-gray-300 dark:hover:text-gray-400 dark:focus:ring-gray-800"
                                                 type="button">
                                                 Action
                                                 <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
@@ -116,7 +116,7 @@
                                                 </svg>
                                             </button>
                                             <!-- Dropdown menu -->
-                                            <div id="dropdown{{$account->id}}" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                                            <div id="dropdown{{$account->id}}" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
                                                 <ul class="py-2 text-sm text-gray-700 dark:text-gray-200">
                                                     <li>
                                                         <a href="{{ route('uacs_edit', $account->id) }}" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
@@ -129,7 +129,7 @@
                                                         <form action="{{ route('uacs_destroy', $account->id) }}" method="POST" class="delete-form" id="delete-form-uacs-{{$account->id}}">
                                                             @csrf
                                                             @method('DELETE')
-                                                            <button id="destroy-btn-{{$account->id}}" type="button" class="delete-button w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white flex items-center focus:outline-none">
+                                                            <button id="destroy-btn-{{$account->id}}" type="button" class="delete-button w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white flex items-center focus:outline-hidden">
                                                                 <i class="fa-solid fa-trash me-2 text-red-500"></i><span class="text-red-500">Delete</span>
                                                             </button>
                                                         </form>
@@ -174,7 +174,7 @@
         </div>
     </div>
 
-    <script>
+    {{-- <script>
         if (document.getElementById("search-table") && typeof simpleDatatables.DataTable !== 'undefined') {
             const dataTable = new simpleDatatables.DataTable("#search-table", {
                 searchable: true,
@@ -208,6 +208,67 @@
                 document.getElementById('delete-form-' + accountId).submit();
             }
         }
-    </script>
+    </script> --}}
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          if (document.getElementById("search-table") && typeof simpleDatatables.DataTable !== 'undefined') {
+              const dataTable = new simpleDatatables.DataTable("#search-table", {
+                  searchable: true,
+                  sortable: false
+              });
+
+              // Function to initialize Flowbite dropdowns
+              function initFlowbiteDropdowns() {
+                  const dropdowns = document.querySelectorAll('[data-dropdown-toggle]');
+                  dropdowns.forEach(dropdown => {
+                      const toggleId = dropdown.getAttribute('data-dropdown-toggle');
+                      const menu = document.getElementById(toggleId);
+                      if (menu && !menu.classList.contains('flowbite-initialized')) {
+                          new Dropdown(menu, dropdown); // Flowbite's Dropdown class
+                          menu.classList.add('flowbite-initialized'); // Prevent reinitialization
+                      }
+                  });
+              }
+
+              // Function to initialize delete button event listeners
+              function initDeleteButtons() {
+                  document.querySelectorAll('.delete-button').forEach(function (button) {
+                      // Remove existing listeners to avoid duplicates
+                      const newButton = button.cloneNode(true);
+                      button.parentNode.replaceChild(newButton, button);
+
+                      newButton.addEventListener('click', function (e) {
+                          e.preventDefault();
+                          const accountId = this.id.split('destroy-btn-')[1];
+
+                          Swal.fire({
+                              title: "Are you sure?",
+                              text: `You are about to delete transaction with ID: ${accountId}`,
+                              icon: "warning",
+                              showCancelButton: true,
+                              confirmButtonColor: "#3085d6",
+                              cancelButtonColor: "#d33",
+                              confirmButtonText: "Yes, delete it!"
+                          }).then((result) => {
+                              if (result.isConfirmed) {
+                                  document.getElementById(`delete-form-transaction-${transactionId}`).submit();
+                              }
+                          });
+                      });
+                  });
+              }
+
+              // Initial initialization
+              initFlowbiteDropdowns();
+              initDeleteButtons();
+
+              // Reinitialize after table updates (e.g., after search or clear)
+              dataTable.on('datatable.update', function () {
+                  initFlowbiteDropdowns();
+                  initDeleteButtons();
+              });
+          }
+      });
+   </script>
 
 </x-app-layout>

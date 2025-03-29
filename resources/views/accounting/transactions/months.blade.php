@@ -56,17 +56,17 @@
 
                                     <div class="flex flex-col space-y-2 mt-6">
                                         <!-- GJ Recap link -->
-                                        {{-- <a href="{{ route('recap') }}" class="text-blue-600 bg-blue-100 hover:bg-blue-200 focus:ring-2 focus:outline-none focus:ring-blue-400 dark:bg-blue-700 dark:text-white dark:hover:bg-blue-600 font-semibold rounded-lg text-sm px-5 py-2 w-full text-center">
+                                        {{-- <a href="{{ route('recap') }}" class="text-blue-600 bg-blue-100 hover:bg-blue-200 focus:ring-2 focus:outline-hidden focus:ring-blue-400 dark:bg-blue-700 dark:text-white dark:hover:bg-blue-600 font-semibold rounded-lg text-sm px-5 py-2 w-full text-center">
                                             GJ Recap
                                         </a> --}}
                                         <!-- GJ Recap Button -->
-                                       <button class="gj-recap-btn text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer"
+                                       <button class="gj-recap-btn text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-hidden focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer"
                                        data-month="{{ $month->month }}">
                                           GJ Recap
                                        </button>
 
                                         <!-- Transaction List link -->
-                                        <a href="{{ route('transaction.entries', ['year' => $year, 'month' => $month->month]) }}" class="text-blue-600 bg-blue-100 hover:bg-blue-200 focus:ring-2 focus:outline-none focus:ring-blue-400 dark:bg-blue-700 dark:text-white dark:hover:bg-blue-600 font-semibold rounded-lg text-sm px-5 py-2 w-full text-center">
+                                        <a href="{{ route('transaction.entries', ['year' => $year, 'month' => $month->month]) }}" class="text-blue-600 bg-blue-100 hover:bg-blue-200 focus:ring-2 focus:outline-hidden focus:ring-blue-400 dark:bg-blue-700 dark:text-white dark:hover:bg-blue-600 font-semibold rounded-lg text-sm px-5 py-2 w-full text-center">
                                             Transaction List
                                         </a>
                                     </div>

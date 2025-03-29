@@ -1,8 +1,50 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+@import "flowbite/dist/flowbite.css";
 
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../vendor/laravel/jetstream/**/*.blade.php';
+@source '../../node_modules/flowbite/**/*.js';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-sans:
+    Figtree, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+  --color-primary-600: #3b82f6;
+  --color-primary-700: #2563eb;
+  --color-primary-800: #1d4ed8;
+
+  --color-secondary-600: #6c757d;
+  --color-secondary-700: #5a6268;
+  --color-secondary-800: #495057;
+  --color-secondary-900: #343a40;
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
 
 [x-cloak] {
     display: none;
+}
+
+.group:hover .dropdown-menu {
+   display: block !important;
 }

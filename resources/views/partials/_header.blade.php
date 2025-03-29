@@ -35,7 +35,7 @@
 
         {{-- for flowbite datatables --}}
         <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
-        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
 
         <!-- Include jQuery -->
         <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
@@ -47,6 +47,8 @@
         <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
         {{-- <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script> --}}
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.turbo.min.js"></script>
     </head>
 
 <body class="font-sans antialiased">
